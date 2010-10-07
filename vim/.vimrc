@@ -56,6 +56,7 @@ set ai              " auto-indenting for programming
 " Settings for tabs
 set tabstop=4
 set shiftwidth=4
+set expandtab
 
 " Filetype stuff
 filetype on
@@ -81,9 +82,6 @@ set scrolloff=2
 " Share clipboard between windows
 set clipboard=unnamed
 
-" Save on focus lost
-au FocusLost * :wa
-
 
 " Key remappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -102,9 +100,6 @@ noremap K <C-f>
 
 " One less key (<shift>) to press each time
 nnoremap ; :
-
-" Easier to quit insert mode than hitting <ESC> each time
-inoremap ii <ESC>
 
 " Easier Autocompletion
 inoremap qq <C-p>
