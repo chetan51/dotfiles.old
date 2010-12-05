@@ -54,9 +54,9 @@ set showmatch       " automatically show matching brackets
 set ai              " auto-indenting for programming
 
 " Settings for tabs
-set tabstop=4
-set shiftwidth=4
-set expandtab
+"set tabstop=4
+"set shiftwidth=4
+"set expandtab
 
 " Filetype stuff
 filetype on
