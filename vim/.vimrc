@@ -101,9 +101,6 @@ noremap K <C-f>
 " One less key (<shift>) to press each time
 nnoremap ; :
 
-" Easier Autocompletion
-inoremap qq <C-p>
-
 
 " Shortcuts for vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
