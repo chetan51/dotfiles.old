@@ -58,6 +58,10 @@ set ai              " auto-indenting for programming
 "set shiftwidth=4
 "set expandtab
 
+" Indentation settings
+set cindent
+set cinoptions=(0,u0,U0
+
 " Filetype stuff
 filetype on
 filetype plugin on
