@@ -50,6 +50,9 @@ set cursorline
 syntax on           " syntax highlighting
 set showmatch       " automatically show matching brackets
 
+" Syntax highlighting
+au BufNewFile,BufRead *.less set filetype=css
+
 " Editing in insert mode
 set ai              " auto-indenting for programming
 
