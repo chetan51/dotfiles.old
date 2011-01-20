@@ -1,0 +1,1 @@
+map <buffer> <Leader>pe :w<CR>:!/usr/bin/env python % <CR>
