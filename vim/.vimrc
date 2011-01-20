@@ -125,6 +125,10 @@ nnoremap <leader>wk <C-w>j
 nnoremap <leader>wh <C-w>k
 nnoremap <leader>wl <C-w>l
 
+" Settings for tab key
+nnoremap <leader>t2e :setl ts=2<Enter>:setl sw=2<Enter>:setl expandtab<Enter>
+nnoremap <leader>t4e :setl ts=4<Enter>:setl sw=4<Enter>:setl expandtab<Enter>
+nnoremap <leader>t4d :setl ts=4<Enter>:setl sw=4<Enter>:setl noexpandtab<Enter>
 
 " Shortcuts for LaTeX
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
