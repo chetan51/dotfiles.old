@@ -225,6 +225,11 @@ map <leader>nf :FuzzyFinderTextMate<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let objc_man_key = '_'
 
+" Taglist
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
+map <leader>tl :TlistToggle<CR>
+
 " Stuff that has to be last
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
