@@ -221,6 +221,9 @@ nmap <leader>rp :RainbowParenthesesToggle<CR>
 " Shortcut mapping
 map <leader>nf :FuzzyFinderTextMate<CR>
 
+" Cocoa
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let objc_man_key = '_'
 
 " Stuff that has to be last
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
