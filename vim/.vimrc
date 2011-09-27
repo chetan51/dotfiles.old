@@ -31,7 +31,11 @@ set wildignore=*.swp,*.bak,*.pyc,*.class
 set backupdir=~/.vim/tmp/backup// " backups
 set directory=~/.vim/tmp/swap//   " swap files
 set backup                        " enable backups
+
+" File loading and saving
 set ar                            " auto-reload changed files
+:au FocusLost * silent! wa        " save on focus lost
+:set autowrite                    " save on buffer switch
 
 " Encoding / end of file (EOF) settings
 set encoding=utf-8
