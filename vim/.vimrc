@@ -76,9 +76,6 @@ filetype indent on
 set wildmenu
 set wildmode=list:longest
 
-" Turn on spell checking
-set spell
-
 " Settings for search and replace
 set incsearch 		" turn on incremental search 
 set ignorecase
