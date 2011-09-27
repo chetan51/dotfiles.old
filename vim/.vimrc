@@ -234,4 +234,5 @@ map <leader>tl :TlistToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Set color scheme
-colorscheme wombat
+colorscheme molokai
+let g:molokai_original = 1
