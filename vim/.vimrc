@@ -114,8 +114,8 @@ nnoremap ; :
 " Shortcuts for vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" <Leader>vrc brings up .vimrc in a split window for editing
-map <Leader>vrc :sp $MYVIMRC<CR><C-W>_
+" <Leader>vrc brings up .vimrc for editing
+map <Leader>vrc :e $MYVIMRC<CR>
 
 " Split windows
 nnoremap <leader>ws <C-w>s<C-w>l
