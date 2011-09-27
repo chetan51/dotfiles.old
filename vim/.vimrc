@@ -39,7 +39,7 @@ set binary noeol 	" do NOT put a carriage return at the end of the last line! if
 
 " General display settings
 set vb							" turn on the "visual bell" - which is much quieter than the "audio blink"
-set lines=50 columns=84 		" initial window size
+"set lines=50 columns=84			" initial window size
 set relativenumber				" turn on relative line numbers
 set ruler						" turn on ruler
 set wrap						" turn on soft wrap and word wrap
