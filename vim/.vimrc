@@ -239,5 +239,5 @@ map <leader>tl :TlistToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Set color scheme
-colorscheme molokai
+colorscheme jellybeans
 let g:molokai_original = 1
