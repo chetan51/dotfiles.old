@@ -31,6 +31,7 @@ set wildignore=*.swp,*.bak,*.pyc,*.class
 set backupdir=~/.vim/tmp/backup// " backups
 set directory=~/.vim/tmp/swap//   " swap files
 set backup                        " enable backups
+set noswapfile                    " disable swap files
 
 " File loading and saving
 set ar                            " auto-reload changed files
