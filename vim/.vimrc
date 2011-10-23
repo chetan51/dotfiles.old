@@ -222,7 +222,8 @@ nmap <leader>rp :RainbowParenthesesToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Shortcut mapping
-map <leader>nf :FuzzyFinderTextMate<CR>
+"map <leader>nf :FuzzyFinderTextMate<CR>
+map <leader>nf :CtrlP<CR>
 
 " Cocoa
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
