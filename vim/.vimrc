@@ -236,6 +236,8 @@ map <leader>tl :TlistToggle<CR>
 " Ctrl-P
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ctrlp_working_path_mode = 0
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*
+let g:ctrlp_mru_files = 1
 
 " Shortcut mapping
 map <leader>nf :CtrlP<CR>
