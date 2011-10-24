@@ -223,7 +223,6 @@ nmap <leader>rp :RainbowParenthesesToggle<CR>
 
 " Shortcut mapping
 "map <leader>nf :FuzzyFinderTextMate<CR>
-map <leader>nf :CtrlP<CR>
 
 " Cocoa
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -233,6 +232,13 @@ let objc_man_key = '_'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 map <leader>tl :TlistToggle<CR>
+
+" Ctrl-P
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ctrlp_working_path_mode = 0
+
+" Shortcut mapping
+map <leader>nf :CtrlP<CR>
 
 " Stuff that has to be last
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
