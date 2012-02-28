@@ -1,6 +1,27 @@
 " Vim editor and display settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" [Vimbits]
+
+" Reselect visual block after indent/outdent
+vnoremap < <gv
+vnoremap > >gv
+
+" Make Y behave like other capitals
+map Y y$
+
+" Automatically reload vimrc when it's saved
+au BufWritePost .vimrc so ~/.vimrc
+
+" Use sane regexes
+nnoremap / /\v
+vnoremap / /\v
+
+" Select all
+map <Leader>sa ggVG
+
+" End [Vimbits]
+
 " Disable compatibility
 set nocompatible
 
@@ -96,9 +117,9 @@ set clipboard=unnamed
 let mapleader = ","
 
 " Change movement keys for Colemak
-noremap h k
+noremap h gk
 noremap j h
-noremap k j
+noremap k gj
 
 " Easier page up / page down
 noremap H <C-b>
@@ -112,7 +133,7 @@ nnoremap ; :
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " <Leader>vrc brings up .vimrc for editing
-map <Leader>vrc :e $MYVIMRC<CR>
+map <Leader>rc :e $MYVIMRC<CR>
 
 " Split windows
 nnoremap <leader>ws <C-w>s<C-w>l
@@ -246,5 +267,6 @@ map <leader>nf :CtrlP<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Set color scheme
-colorscheme jellybeans
-let g:molokai_original = 1
+syntax enable
+set background=dark
+colorscheme solarized
