@@ -117,9 +117,9 @@ set clipboard=unnamed
 let mapleader = ","
 
 " Change movement keys for Colemak
-noremap h gk
+noremap h k
 noremap j h
-noremap k gj
+noremap k j
 
 " Easier page up / page down
 noremap H <C-b>
