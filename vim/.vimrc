@@ -249,6 +249,10 @@ nmap <leader>rp :RainbowParenthesesToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let objc_man_key = '_'
 
+" Clojure / ClojureScript
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufRead,BufNewFile *.cljs setlocal filetype=clojure
+
 " Taglist
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
