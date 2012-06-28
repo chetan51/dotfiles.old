@@ -41,6 +41,13 @@ set showmode
 set showcmd
 set laststatus=2    " always shows status bar
 
+" Intelligent line numbers
+set rnu
+au InsertEnter * :set nu
+au InsertLeave * :set rnu
+au FocusLost * :set nu
+au FocusGained * :set rnu
+
 " Set history and undo levels
 set history=1000         " remember more commands and search history
 set undolevels=1000      " use many muchos levels of undo
