@@ -17,3 +17,9 @@ do
 	mv "$SUBLIME/$directory" "$SUBLIME/old"
 	ln -s "$DOTFILES/sublime/$directory" "$SUBLIME"
 done
+
+PREFERENCES="$HOME/Library/Preferences"
+# iTerm
+mkdir "$PREFERENCES/old"
+mv "$PREFERENCES/net.sourceforge.iTerm.plist" "$PREFERENCES/old"
+ln -s "$DOTFILES/zsh/iterm/net.sourceforge.iTerm.plist" "$PREFERENCES"
