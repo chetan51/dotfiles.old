@@ -81,7 +81,7 @@ fi
 export PATH=$PATH:/opt/local/bin:/opt/local/sbin
 # Finished adapting your PATH environment variable for use with MacPorts.
 
-[ -s "/Users/Chetan/.scm_breeze/scm_breeze.sh" ] && source "/Users/Chetan/.scm_breeze/scm_breeze.sh"
+[ -s "$HOME/.scm_breeze/scm_breeze.sh" ] && source "$HOME/.scm_breeze/scm_breeze.sh"
 
 # Use modern completion system
 autoload -Uz compinit
