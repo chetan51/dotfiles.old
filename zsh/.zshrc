@@ -60,13 +60,13 @@ alias ql="qlmanage -p"
 export PGDATA=/Library/PostgreSQL/9.1/data
 
 # Setup Amazon EC2 Command-Line Tools
-export EC2_HOME=~/.ec2
-export PATH=$PATH:$EC2_HOME/bin
-export EC2_PRIVATE_KEY=`ls $EC2_HOME/pk-*.pem`
-export EC2_CERT=`ls $EC2_HOME/cert-*.pem`
-export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home/
-export AWS_CREDENTIALS_FILE=~/.ec2/aws-credentials
-export PERL5LIB=/usr/bin
+#export EC2_HOME=~/.ec2
+#export PATH=$PATH:$EC2_HOME/bin
+#export EC2_PRIVATE_KEY=`ls $EC2_HOME/pk-*.pem`
+#export EC2_CERT=`ls $EC2_HOME/cert-*.pem`
+#export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home/
+#export AWS_CREDENTIALS_FILE=~/.ec2/aws-credentials
+#export PERL5LIB=/usr/bin
 
 # RVM
 #export CC=gcc-4.2
