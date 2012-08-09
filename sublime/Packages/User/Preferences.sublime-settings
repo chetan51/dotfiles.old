@@ -1,0 +1,8 @@
+{
+	"font_size": 12,
+	"ignored_packages": ["VintageEx"],
+	"theme": "Soda Dark.sublime-theme",
+	"vintage_start_in_command_mode": true,
+	"vintage_use_clipboard": true,
+	"tab_size": 4
+}

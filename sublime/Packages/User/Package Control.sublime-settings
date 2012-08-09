@@ -1,0 +1,15 @@
+{
+	"auto_upgrade_last_run": 1344540490,
+	"installed_packages":
+	[
+		"Alignment",
+		"IcedCoffeeScript",
+		"LESS",
+		"Package Control",
+		"SublimeCodeIntel",
+		"SublimeLinter",
+		"Theme - Soda",
+		"VintageEx",
+		"ZenCoding"
+	]
+}
