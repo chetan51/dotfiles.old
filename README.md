@@ -1,6 +1,6 @@
 ## Installation
 
-First get [Homebrew](http://mxcl.github.com/homebrew/).
+First get [Homebrew](http://mxcl.github.com/homebrew/) and [Sublime Text](http://www.sublimetext.com/).
 
 Then:
 
