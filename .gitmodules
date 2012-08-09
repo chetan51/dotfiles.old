@@ -7,3 +7,6 @@
 [submodule "vim/bundle/clam.vim"]
 	path = vim/bundle/clam.vim
 	url = git://github.com/sjl/clam.vim.git
+[submodule "vim/bundle/detectindent"]
+	path = vim/bundle/detectindent
+	url = git://github.com/ciaranm/detectindent.git
