@@ -1,0 +1,4 @@
+bind main k move-down
+bind main K scroll-page-down
+bind main h move-up
+bind main H scroll-page-up

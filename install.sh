@@ -23,3 +23,6 @@ PREFERENCES="$HOME/Library/Preferences"
 mkdir "$PREFERENCES/old"
 mv "$PREFERENCES/net.sourceforge.iTerm.plist" "$PREFERENCES/old"
 ln -s "$DOTFILES/zsh/iterm/net.sourceforge.iTerm.plist" "$PREFERENCES"
+
+# tig
+ln -s "$DOTFILES/tig/.tigrc" "$HOME/.tigrc"

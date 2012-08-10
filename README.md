@@ -11,3 +11,4 @@ Then:
 	git submodule update --init
 	./install
 	./scm_breeze/install.sh
+  brew install tig
