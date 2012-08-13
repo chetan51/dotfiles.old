@@ -68,6 +68,10 @@ export PGDATA=/Library/PostgreSQL/9.1/data
 #export AWS_CREDENTIALS_FILE=~/.ec2/aws-credentials
 #export PERL5LIB=/usr/bin
 
+# Hadoop
+alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
+alias hadoop-stop="/usr/local/Cellar/hadoop/1.0.3/bin/stop-all.sh"
+
 # RVM
 #export CC=gcc-4.2
 [[ -s "/Users/Chetan/.rvm/scripts/rvm" ]] && source "/Users/Chetan/.rvm/scripts/rvm"  # This loads RVM into a shell session.
