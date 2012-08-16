@@ -104,7 +104,8 @@
         "browser": true,
         "wsh": true,
         "trailing": false,
-        "sub": true
+        "sub": true,
+        "smarttabs": true
     },
 
     // A list of command line options to send to gjslint. --nobeep is always sent.
