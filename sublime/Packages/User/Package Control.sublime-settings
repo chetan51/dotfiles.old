@@ -1,5 +1,5 @@
 {
-	"auto_upgrade_last_run": 1344544883,
+	"auto_upgrade_last_run": 1345186205,
 	"installed_packages":
 	[
 		"Alignment",
@@ -8,6 +8,7 @@
 		"Package Control",
 		"SublimeCodeIntel",
 		"SublimeLinter",
+		"SublimeOnSaveBuild",
 		"Theme - Soda",
 		"VintageEx",
 		"ZenCoding"
