@@ -26,3 +26,9 @@ ln -s "$DOTFILES/zsh/iterm/net.sourceforge.iTerm.plist" "$PREFERENCES"
 
 # tig
 ln -s "$DOTFILES/tig/.tigrc" "$HOME/.tigrc"
+
+# rbenv
+ln -s "$DOTFILES/rbenv" "$HOME/.rbenv"
+
+# nvm
+ln -s "$DOTFILES/nvm" "$HOME/.nvm"
