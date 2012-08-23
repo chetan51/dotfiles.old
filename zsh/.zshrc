@@ -72,10 +72,6 @@ export PGDATA=/Library/PostgreSQL/9.1/data
 alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
 alias hadoop-stop="/usr/local/Cellar/hadoop/1.0.3/bin/stop-all.sh"
 
-# RVM
-#export CC=gcc-4.2
-[[ -s "/Users/Chetan/.rvm/scripts/rvm" ]] && source "/Users/Chetan/.rvm/scripts/rvm"  # This loads RVM into a shell session.
-
 # Autojump
 if [ -f `brew --prefix`/etc/autojump ]; then
   . `brew --prefix`/etc/autojump
@@ -106,3 +102,5 @@ zstyle ':completion:*' verbose true
 
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
