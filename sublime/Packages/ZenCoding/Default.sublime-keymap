@@ -321,7 +321,7 @@
  {"command": "expand_zen_abbreviation_on_tab",
   "context": [{"key": "selector",
                "match_all": true,
-               "operand": "source.css - source.css.embedded, text.xml, text.html -source -meta.tag, meta.scope.between-tag-pair.html -source",
+               "operand": "source.css - source.css.embedded, text.xml, text.xsl, text.html -source -meta.tag, meta.scope.between-tag-pair.html -source",
                "operator": "equal"},
               {"key": "selection_empty",
                "match_all": true,

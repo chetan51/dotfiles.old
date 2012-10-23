@@ -1,12 +1,12 @@
 {
-	"font_size": 12,
+	"font_size": 12.0,
 	"ignored_packages":
 	[
 		"VintageEx"
 	],
+	"show_panel_on_build": false,
 	"tab_size": 4,
 	"theme": "Soda Dark.sublime-theme",
 	"vintage_start_in_command_mode": true,
-	"vintage_use_clipboard": true,
-	"show_panel_on_build": false
+	"vintage_use_clipboard": true
 }
