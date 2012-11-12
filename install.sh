@@ -9,7 +9,7 @@ ln -s "$DOTFILES/vim/.vimrc" "$HOME/.vimrc"
 ln -s "$DOTFILES/zsh/oh-my-zsh" "$HOME/.oh-my-zsh"
 ln -s "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 
-Sublime Text
+# Sublime Text
 SUBLIME="$HOME/Library/Application Support/Sublime Text 2"
 mkdir -p "$SUBLIME/old"
 for directory in "Packages" "Installed Packages" "Pristine Packages"
