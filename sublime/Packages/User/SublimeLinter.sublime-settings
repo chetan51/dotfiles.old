@@ -1,3 +1,7 @@
 {
-	"pep8": false
+	"pep8": false,
+	"jshint_options":
+    {
+        "smarttabs": true
+    }
 }
