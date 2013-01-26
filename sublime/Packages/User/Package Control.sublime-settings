@@ -3,6 +3,7 @@
 	"installed_packages":
 	[
 		"Alignment",
+		"EasyMotion",
 		"IcedCoffeeScript",
 		"LESS",
 		"Package Control",
