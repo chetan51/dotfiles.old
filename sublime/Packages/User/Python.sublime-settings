@@ -3,6 +3,5 @@
     // Indent using spaces, 4 spaces ber indent by default
     "tab_size": 4,
     "translate_tabs_to_spaces": true,
-    "trim_automatic_white_space": true,
-    "trim_trailing_white_space_on_save": true
+    "trim_automatic_white_space": true
 }
