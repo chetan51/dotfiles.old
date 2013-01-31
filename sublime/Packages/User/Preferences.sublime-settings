@@ -7,7 +7,7 @@
 	"show_panel_on_build": false,
 	"tab_size": 4,
 	"theme": "Soda Dark.sublime-theme",
+	"vintage_lines.force_mode": true,
 	"vintage_start_in_command_mode": true,
-	"vintage_use_clipboard": true,
-	"vintage_lines.force_mode": true
+	"vintage_use_clipboard": true
 }
