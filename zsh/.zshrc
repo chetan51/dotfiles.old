@@ -73,9 +73,7 @@ alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
 alias hadoop-stop="/usr/local/Cellar/hadoop/1.0.3/bin/stop-all.sh"
 
 # Autojump
-if [ -f `brew --prefix`/etc/autojump ]; then
-  . `brew --prefix`/etc/autojump
-fi
+[[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
 
 # MacPorts Installer addition on 2009-12-01_at_22:52:56: adding an appropriate PATH variable for use with MacPorts.
 export PATH=$PATH:/opt/local/bin:/opt/local/sbin
@@ -114,3 +112,4 @@ eval "$(rbenv init -)"
 
 # nvm
 . ~/.nvm/nvm.sh
+[ -s "/Users/chetansurpur/.scm_breeze/scm_breeze.sh" ] && source "/Users/chetansurpur/.scm_breeze/scm_breeze.sh"
