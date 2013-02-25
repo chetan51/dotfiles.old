@@ -59,6 +59,9 @@ alias ql="qlmanage -p"
 # Postgres
 export PGDATA=/Library/PostgreSQL/9.1/data
 
+# Octave
+export GNUTERM=x11
+
 # Setup Amazon EC2 Command-Line Tools
 #export EC2_HOME=~/.ec2
 #export PATH=$PATH:$EC2_HOME/bin
