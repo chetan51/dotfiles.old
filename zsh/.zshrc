@@ -40,9 +40,6 @@ alias chrome-dev="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google
 # MacVim aliases
 #alias v="mvim"
 
-# Sublime Text aliases
-alias s="subl -n ."
-
 # ChetanSurpur.com aliases
 alias chetansurpur="ssh root@chetansurpur.com"
 
@@ -75,8 +72,11 @@ export GNUTERM=x11
 alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
 alias hadoop-stop="/usr/local/Cellar/hadoop/1.0.3/bin/stop-all.sh"
 
-# Autojump
-[[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
+# Fasd
+eval "$(fasd --init posix-alias zsh-hook)"
+
+# Sublime Text aliases
+alias s="subl -n ."
 
 # MacPorts Installer addition on 2009-12-01_at_22:52:56: adding an appropriate PATH variable for use with MacPorts.
 export PATH=$PATH:/opt/local/bin:/opt/local/sbin
@@ -86,6 +86,9 @@ export PATH=$PATH:/opt/local/bin:/opt/local/sbin
 
 # Git aliases
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
+# Go
+export GOPATH=~/Development/go
 
 # Use modern completion system
 autoload -Uz compinit

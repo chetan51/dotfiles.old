@@ -6,6 +6,12 @@ class VintageLinesEventListener(sublime_plugin.EventListener):
 		self.icon_count = 99
 		self.on_load = self.on_new = self.on_activated
 
+		# Set icon path depending on version
+		if int(sublime.version()) >= 3000:
+			self.icon_path = "Packages/VintageLines/icons/%s/%s.png"
+		else:
+			self.icon_path = "../VintageLines/icons/%s/%s"
+
 	def showRelativeNumbers(self):
 		view = self.view
 
@@ -13,15 +19,20 @@ class VintageLinesEventListener(sublime_plugin.EventListener):
 
 		cur_line = view.rowcol(view.sel()[0].begin())[0]
 		start_line = max(cur_line-self.icon_count, 0)
-		end_line = min(cur_line+self.icon_count+1, self.view.rowcol(self.view.size())[0])
+		end_line = min(cur_line+self.icon_count, self.view.rowcol(self.view.size())[0])
 
-		lines = self.view.lines(sublime.Region(self.view.text_point(start_line, 0), self.view.text_point(end_line, 0)))
+		lines = self.view.lines(sublime.Region(self.view.text_point(start_line, 0), self.view.text_point(end_line + 1, 0)))
 
-		for i in range(start_line, end_line):
+		# Append the last line's region manually (if necessary)
+		if (len(lines) < end_line - start_line + 1):
+			last_text_point = lines[-1].end() + 1
+			lines.append(sublime.Region(last_text_point, last_text_point))
+
+		for i in range(start_line, start_line + len(lines)):
 			name = 'linenum' + str(i-start_line)
 			icon = str(int(math.fabs(cur_line - i)))
 
-			view.add_regions(name, [lines[i-start_line]], 'linenums', "../VintageLines/icons/%s/%s" % (sublime.platform(), icon), sublime.HIDDEN)
+			view.add_regions(name, [lines[i-start_line]], 'linenums', self.icon_path % (sublime.platform(), icon), sublime.HIDDEN)
 
 	def removeRelativeNumbers(self):
 		self.view.settings().set('line_numbers', True)
@@ -48,7 +59,7 @@ class VintageLinesEventListener(sublime_plugin.EventListener):
 
 			if settings.has("vintage_lines.force_mode"):
 				show = settings.get("vintage_lines.force_mode")
-			elif type(settings.get('command_mode')) is types.BooleanType:
+			elif type(settings.get('command_mode')) is bool:
 				show = settings.get('command_mode')
 			else:
 				show = False
