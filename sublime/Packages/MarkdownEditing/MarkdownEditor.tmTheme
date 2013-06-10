@@ -577,6 +577,7 @@
                 <string>#EEEEEE00</string>
             </dict>
         </dict>
+
         <dict>
             <key>name</key>
             <string>Markdown: Punctuation</string>

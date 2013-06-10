@@ -90,6 +90,23 @@ alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgree
 # Go
 export GOPATH=~/Development/go
 
+# NuPIC
+export NTA=$HOME/nta/eng
+export PATH=$NTA/bin:$PATH
+export PYTHONPATH=$NTA/lib/python2.6/site-packages:$PYTHONPATH
+export NUPIC=$HOME/Development/nupic
+export NTA_ROOTDIR=$NTA
+# Convenience variable for temporary build files.
+export BUILDDIR=$HOME/ntabuild
+
+LDIR="$NTA/lib"
+if [[ ! "$DYLD_LIBRARY_PATH" =~ "$LDIR" ]]; then
+  export DYLD_LIBRARY_PATH=$LDIR:$DYLD_LIBRARY_PATH
+fi
+if [[ ! "$LD_LIBRARY_PATH" =~ "$LDIR" ]]; then
+  export LD_LIBRARY_PATH=$LDIR:$LD_LIBRARY_PATH
+fi
+
 # Use modern completion system
 autoload -Uz compinit
 compinit
