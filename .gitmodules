@@ -25,3 +25,6 @@
 [submodule "ruby-build"]
 	path = ruby-build
 	url = git://github.com/sstephenson/ruby-build.git
+[submodule "ff"]
+	path = ff
+	url = git://github.com/silentbicycle/ff.git

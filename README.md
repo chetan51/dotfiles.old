@@ -11,4 +11,7 @@ Then:
 	git submodule update --init --recursive
 	./install
 	./scm_breeze/install.sh
-  brew install tig
+    brew install tig
+    cd ff
+    make
+    ln -s ~/dotfiles/ff/ff /usr/local/bin/ff
