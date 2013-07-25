@@ -20,6 +20,9 @@ plugins=(rails git ruby osx)
 
 source $ZSH/oh-my-zsh.sh
 
+# pyenv setup
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+
 # Customize to your needs...
 export PATH=/Library/PostgreSQL/9.1/bin:$PATH
 export PATH=$HOME/bin:$PATH:/opt/local/bin:~/opt/bin:~/.gem/ruby/1.8/bin:
@@ -93,21 +96,11 @@ alias gpu="git push"
 export GOPATH=~/Development/go
 
 # NuPIC
-export NTA=$HOME/nta/eng
-export PATH=$NTA/bin:$PATH
-export PYTHONPATH=$NTA/lib/python2.6/site-packages:$PYTHONPATH
 export NUPIC=$HOME/Development/nupic
-export NTA_ROOTDIR=$NTA
-# Convenience variable for temporary build files.
-export BUILDDIR=$HOME/ntabuild
-
-LDIR="$NTA/lib"
-if [[ ! "$DYLD_LIBRARY_PATH" =~ "$LDIR" ]]; then
-  export DYLD_LIBRARY_PATH=$LDIR:$DYLD_LIBRARY_PATH
-fi
-if [[ ! "$LD_LIBRARY_PATH" =~ "$LDIR" ]]; then
-  export LD_LIBRARY_PATH=$LDIR:$LD_LIBRARY_PATH
-fi
+export NTA=$HOME/Development/nta/eng
+export BUILDDIR=/tmp/ntabuild
+export MK_JOBS=3
+source $NUPIC/env.sh
 
 # Use modern completion system
 autoload -Uz compinit
