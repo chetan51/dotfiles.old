@@ -1,26 +1,26 @@
 #!python
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
-# 
+#
 # The contents of this file are subject to the Mozilla Public License
 # Version 1.1 (the "License"); you may not use this file except in
 # compliance with the License. You may obtain a copy of the License at
 # http://www.mozilla.org/MPL/
-# 
+#
 # Software distributed under the License is distributed on an "AS IS"
 # basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
 # License for the specific language governing rights and limitations
 # under the License.
-# 
+#
 # The Original Code is Komodo code.
-# 
+#
 # The Initial Developer of the Original Code is ActiveState Software Inc.
 # Portions created by ActiveState Software Inc are Copyright (C) 2000-2007
 # ActiveState Software Inc. All Rights Reserved.
-# 
+#
 # Contributor(s):
 #   ActiveState Software Inc
-# 
+#
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
 # the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
@@ -32,11 +32,12 @@
 # and other provisions required by the GPL or the LGPL. If you do not delete
 # the provisions above, a recipient may use your version of this file under
 # the terms of any one of the MPL, the GPL or the LGPL.
-# 
+#
 # ***** END LICENSE BLOCK *****
 
 """Code Intelligence: utility functions"""
 
+import bisect
 import os
 from os.path import basename
 import sys
@@ -47,16 +48,17 @@ import logging
 import types
 from pprint import pprint, pformat
 import time
-
-from codeintel2.common import CodeIntelError
+import codecs
 
 # Global dict for holding specific hotshot profilers
 hotshotProfilers = {}
 
 #---- general stuff
 
+
 def isident(char):
     return "a" <= char <= "z" or "A" <= char <= "Z" or char == "_"
+
 
 def isdigit(char):
     return "0" <= char <= "9"
@@ -66,6 +68,8 @@ def isdigit(char):
 _safe_lang_from_lang_cache = {
     "C++": "cpp",
 }
+
+
 def safe_lang_from_lang(lang):
     global _safe_lang_from_lang_cache
     try:
@@ -111,6 +115,7 @@ def guess_lang_from_path(path):
         if ext in lang_from_ext:
             return lang_from_ext[ext]
         idx += 1
+    from codeintel2.common import CodeIntelError
     raise CodeIntelError("couldn't guess lang for `%s'" % path)
 
 
@@ -118,7 +123,7 @@ def gen_dirs_under_dirs(dirs, max_depth, interesting_file_patterns=None,
                         skip_scc_control_dirs=True):
     """Generate all dirs under the given dirs (including the given dirs
     themselves).
-    
+
         "max_depth" is an integer maximum number of sub-directories that
             this method with recurse.
         "file_patterns", if given, is a sequence of glob patterns for
@@ -131,7 +136,7 @@ def gen_dirs_under_dirs(dirs, max_depth, interesting_file_patterns=None,
     from fnmatch import fnmatch
 
     dirs_to_skip = (skip_scc_control_dirs
-        and ["CVS", ".svn", ".hg", ".git", ".bzr"] or [])
+                    and ["CVS", ".svn", ".hg", ".git", ".bzr"] or [])
     # We must keep track of the directories we have walked, as the list of dirs
     # can overlap - bug 90289.
     walked_these_dirs = {}
@@ -151,20 +156,18 @@ def gen_dirs_under_dirs(dirs, max_depth, interesting_file_patterns=None,
                         dirnames.remove(dir_to_skip)
             if interesting_file_patterns:
                 for pat, filename in (
-                    (p,f) for p in interesting_file_patterns
-                          for f in filenames):
+                    (p, f) for p in interesting_file_patterns
+                        for f in filenames):
                     if fnmatch(filename, pat):
                         break
                 else:
                     # No interesting files in this dir.
                     continue
-        
+
             yield dirpath
 
 
-
 #---- standard module/class/function doc parsing
-
 LINE_LIMIT = 5      # limit full number of lines this number
 LINE_WIDTH = 60     # wrap doc summaries to this width
 
@@ -174,12 +177,14 @@ LINE_WIDTH = 60     # wrap doc summaries to this width
 #    foo(args) -- description
 #    retval = foo(args)
 #    retval = foo(args) -- description
-_gPySigLinePat = re.compile(r"^((?P<retval>[^=]+?)\s*=|class)?\s*(?P<head>[\w\.]+\s?\(.*?\))\s*(?P<sep>[:<>=-]*)\s*(?P<tail>.*)$")
-_gSentenceSepPat = re.compile(r"(?<=\.)\s+", re.M) # split on sentence bndry
+_gPySigLinePat = re.compile(
+    r"^((?P<retval>[^=]+?)\s*=|class)?\s*(?P<head>[\w\.]+\s?\(.*?\))\s*(?P<sep>[:<>=-]*)\s*(?P<tail>.*)$")
+_gSentenceSepPat = re.compile(r"(?<=\.)\s+", re.M)  # split on sentence bndry
+
 
 def parseDocSummary(doclines, limit=LINE_LIMIT, width=LINE_WIDTH):
     """Parse out a short summary from the given doclines.
-    
+
         "doclines" is a list of lines (without trailing newlines) to parse.
         "limit" is the number of lines to which to limit the summary.
 
@@ -203,7 +208,7 @@ def parseDocSummary(doclines, limit=LINE_LIMIT, width=LINE_WIDTH):
             break
         sentences = _gSentenceSepPat.split(stripped)
         if sentences and not sentences[-1].endswith('.'):
-            del sentences[-1] # last bit might not be a complete sentence
+            del sentences[-1]  # last bit might not be a complete sentence
         if not sentences:
             desclines.append(stripped + ' ')
             continue
@@ -224,7 +229,7 @@ def parseDocSummary(doclines, limit=LINE_LIMIT, width=LINE_WIDTH):
 def parsePyFuncDoc(doc, fallbackCallSig=None, scope="?", funcname="?"):
     """Parse the given Python function/method doc-string into call-signature
     and description bits.
-    
+
         "doc" is the function doc string.
         "fallbackCallSig" (optional) is a list of call signature lines to
             fallback to if one cannot be determined from the doc string.
@@ -232,7 +237,7 @@ def parsePyFuncDoc(doc, fallbackCallSig=None, scope="?", funcname="?"):
             is just used for better error/log reporting.
         "funcname" (optional) is the function name. This is just used for
             better error/log reporting.
-    
+
     Examples of doc strings with call-signature info:
         close(): explicitly release resources held.
         x.__repr__() <==> repr(x)
@@ -245,8 +250,14 @@ def parsePyFuncDoc(doc, fallbackCallSig=None, scope="?", funcname="?"):
     """
     if doc is None or not doc.strip():
         return ([], [])
-    
+
     limit = LINE_LIMIT
+    if not isinstance(doc, unicode):
+        # try to convert from utf8 to unicode; if we fail, too bad.
+        try:
+            doc = codecs.utf_8_decode(doc)[0]
+        except UnicodeDecodeError:
+            pass
     doclines = doc.splitlines(0)
     index = 0
     siglines = []
@@ -285,8 +296,9 @@ def parsePyFuncDoc(doc, fallbackCallSig=None, scope="?", funcname="?"):
             #   other separtor: leave as part of call sig for now
             descSeps = ("-", "--", ":")
             groupd = match.groupdict()
-            retval, head, sep, tail = (groupd.get("retval"), groupd.get("head"),
-                                       groupd.get("sep"), groupd.get("tail"))
+            retval, head, sep, tail = (
+                groupd.get("retval"), groupd.get("head"),
+                groupd.get("sep"), groupd.get("tail"))
             if retval:
                 siglines.append(head + " -> " + retval)
                 if tail and sep in descSeps:
@@ -300,22 +312,31 @@ def parsePyFuncDoc(doc, fallbackCallSig=None, scope="?", funcname="?"):
             index = len(doclines)
     if not siglines and fallbackCallSig:
         siglines = fallbackCallSig
-    
+
     # Parse out the description block.
     if desclines:
         # Use what we have already. Just need to wrap it.
         desclines = textwrap.wrap(' '.join(desclines), LINE_WIDTH)
     else:
-        limit -= len(siglines)
-        desclines = parseDocSummary(doclines[index:], limit=limit)
+        doclines = doclines[index:]
+        # strip leading empty lines
+        while len(doclines) > 0 and not doclines[0].rstrip():
+            del doclines[0]
+        try:
+            skip_first_line = (doclines[0][0] not in (" \t"))
+        except IndexError:
+            skip_first_line = False  # no lines, or first line is empty
+        desclines = dedent("\n".join(
+            doclines), skip_first_line=skip_first_line)
+        desclines = desclines.splitlines(0)
 
     ## debug logging
-    #f = open("parsePyFuncDoc.log", "a")
-    #if 0:
+    # f = open("parsePyFuncDoc.log", "a")
+    # if 0:
     #    f.write("\n---- %s:\n" % funcname)
     #    f.write(pformat(siglines)+"\n")
     #    f.write(pformat(desclines)+"\n")
-    #else:
+    # else:
     #    f.write("\n")
     #    if siglines:
     #        f.write("\n".join(siglines)+"\n")
@@ -323,7 +344,7 @@ def parsePyFuncDoc(doc, fallbackCallSig=None, scope="?", funcname="?"):
     #        f.write("<no signature for '%s.%s'>\n" % (scope, funcname))
     #    for descline in desclines:
     #        f.write("\t%s\n" % descline)
-    #f.close()
+    # f.close()
 
     return (siglines, desclines)
 
@@ -355,27 +376,34 @@ def unmark_text(markedup_text):
         ('os.path.join(', {'pos': 13, 'start_pos': 12})
         >>> unmark_text('abc<3>defghi<2>jk<4>lm<1>nopqrstuvwxyz')
         ('abcdefghijklmnopqrstuvwxyz', {1: 13, 2: 9, 3: 3, 4: 11, 'pos': 26})
-    
+
     See the matching markup_text() below.
     """
-    splitter = re.compile(r"(<(?:\+|\||\$|\d{1,2})>)")
+    splitter = re.compile(r"(<(?:[\|\+\$\[\]<]|\d+)>)")
     text = ""
     data = {}
+    posNameFromSymbol = {
+        "<|>": "pos",
+        "<+>": "trg_pos",
+        "<$>": "start_pos",
+        "<[>": "start_selection",
+        "<]>": "end_selection",
+    }
+    bracketed_digits_re = re.compile(r'<\d+>$')
     for token in splitter.split(markedup_text):
-        if token == "<|>":
-            data["pos"] = len(text)
-        elif token == "<+>":
-            data["trg_pos"] = len(text)
-        elif token == "<$>":
-            data["start_pos"] = len(text)
-        elif token and token[0] == '<' and isdigit(token[1:-1])\
-             and token[-1] == '>':
+        if token in posNameFromSymbol:
+            data[posNameFromSymbol[token]] = len(text)
+        elif token == "<<>":  # escape sequence
+            text += "<"
+        elif bracketed_digits_re.match(token):
             data[int(token[1:-1])] = len(text)
         else:
             text += token
     if "pos" not in data:
         data["pos"] = len(text)
+    # sys.stderr.write(">> text:%r, data:%s\n" % (text, data))
     return text, data
+
 
 def markup_text(text, pos=None, trg_pos=None, start_pos=None):
     """Markup text with position markers.
@@ -383,9 +411,12 @@ def markup_text(text, pos=None, trg_pos=None, start_pos=None):
     See the matching unmark_text() above.
     """
     positions_and_markers = []
-    if       pos is not None: positions_and_markers.append((      pos, '<|>'))
-    if   trg_pos is not None: positions_and_markers.append((  trg_pos, '<+>'))
-    if start_pos is not None: positions_and_markers.append((start_pos, '<$>'))
+    if pos is not None:
+        positions_and_markers.append((pos, '<|>'))
+    if trg_pos is not None:
+        positions_and_markers.append((trg_pos, '<+>'))
+    if start_pos is not None:
+        positions_and_markers.append((start_pos, '<$>'))
     positions_and_markers.sort()
 
     m_text = ""
@@ -396,10 +427,65 @@ def markup_text(text, pos=None, trg_pos=None, start_pos=None):
     m_text += text[m_pos:]
     return m_text
 
+
+def lines_from_pos(unmarked_text, positions):
+    """Get 1-based line numbers from positions
+        @param unmarked_text {str} The text to examine
+        @param positions {dict or list of int} Positions to look up
+        @returns {dict or list of int} Matching line numbers (1-based)
+    Given some text and either a list of positions, or a dict containing
+    positions as values, return a matching data structure with positions
+    replaced with the line number of the lines the positions are on.  Positions
+    after the last line are assumed to be on a hypothetical line.
+
+    E.g.:
+        Assuming the following text with \n line endings, where each line is
+        exactly 20 characters long:
+        >>> text = '''
+        ... line            one
+        ... line            two
+        ... line          three
+        ... '''.lstrip()
+        >>> lines_from_pos(text, [5, 15, 25, 55, 999])
+        [1, 1, 2, 3, 4]
+        >>> lines_from_pos(text, {"hello": 10, "moo": 20, "not": "an int"})
+        {'moo': 1, 'hello': 1}
+    """
+    lines = unmarked_text.splitlines(True)
+    offsets = [0]
+    for line in lines:
+        offsets.append(offsets[-1] + len(line))
+    try:
+        # assume a dict
+        keys = positions.iterkeys()
+        values = {}
+    except AttributeError:
+        # assume a list/tuple
+        keys = range(len(positions))
+        values = []
+
+    for key in keys:
+        try:
+            position = positions[key] - 0
+        except TypeError:
+            continue  # not a number
+        line_no = bisect.bisect_left(offsets, position)
+        try:
+            values[key] = line_no
+        except IndexError:
+            if key == len(values):
+                values.append(line_no)
+            else:
+                raise
+
+    return values
+
 # Recipe: banner (1.0.1) in C:\trentm\tm\recipes\cookbook
+
+
 def banner(text, ch='=', length=78):
     """Return a banner line centering the given text.
-    
+
         "text" is the text to show in the banner. None can be given to have
             no text.
         "ch" (optional, default '=') is the banner line character (can
@@ -427,32 +513,33 @@ def banner(text, ch='=', length=78):
             prefix = ch * prefix_len
             suffix = ch * suffix_len
         else:
-            prefix = ch * (prefix_len/len(ch)) + ch[:prefix_len%len(ch)]
-            suffix = ch * (suffix_len/len(ch)) + ch[:suffix_len%len(ch)]
+            prefix = ch * (prefix_len/len(ch)) + ch[:prefix_len % len(ch)]
+            suffix = ch * (suffix_len/len(ch)) + ch[:suffix_len % len(ch)]
         return prefix + ' ' + text + ' ' + suffix
 
 
 # Recipe: dedent (0.1.2) in C:\trentm\tm\recipes\cookbook
 def _dedentlines(lines, tabsize=8, skip_first_line=False):
     """_dedentlines(lines, tabsize=8, skip_first_line=False) -> dedented lines
-    
+
         "lines" is a list of lines to dedent.
         "tabsize" is the tab width to use for indent width calculations.
         "skip_first_line" is a boolean indicating if the first line should
             be skipped for calculating the indent width and for dedenting.
             This is sometimes useful for docstrings and similar.
-    
+
     Same as dedent() except operates on a sequence of lines. Note: the
     lines list is modified **in-place**.
     """
     DEBUG = False
-    if DEBUG: 
+    if DEBUG:
         print "dedent: dedent(..., tabsize=%d, skip_first_line=%r)"\
               % (tabsize, skip_first_line)
     indents = []
     margin = None
     for i, line in enumerate(lines):
-        if i == 0 and skip_first_line: continue
+        if i == 0 and skip_first_line:
+            continue
         indent = 0
         for ch in line:
             if ch == ' ':
@@ -460,21 +547,24 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
             elif ch == '\t':
                 indent += tabsize - (indent % tabsize)
             elif ch in '\r\n':
-                continue # skip all-whitespace lines
+                continue  # skip all-whitespace lines
             else:
                 break
         else:
-            continue # skip all-whitespace lines
-        if DEBUG: print "dedent: indent=%d: %r" % (indent, line)
+            continue  # skip all-whitespace lines
+        if DEBUG:
+            print "dedent: indent=%d: %r" % (indent, line)
         if margin is None:
             margin = indent
         else:
             margin = min(margin, indent)
-    if DEBUG: print "dedent: margin=%r" % margin
+    if DEBUG:
+        print "dedent: margin=%r" % margin
 
     if margin is not None and margin > 0:
         for i, line in enumerate(lines):
-            if i == 0 and skip_first_line: continue
+            if i == 0 and skip_first_line:
+                continue
             removed = 0
             for j, ch in enumerate(line):
                 if ch == ' ':
@@ -482,7 +572,8 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
                 elif ch == '\t':
                     removed += tabsize - (removed % tabsize)
                 elif ch in '\r\n':
-                    if DEBUG: print "dedent: %r: EOL -> strip up to EOL" % line
+                    if DEBUG:
+                        print "dedent: %r: EOL -> strip up to EOL" % line
                     lines[i] = lines[i][j:]
                     break
                 else:
@@ -503,6 +594,7 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
                     lines[i] = lines[i][removed:]
     return lines
 
+
 def dedent(text, tabsize=8, skip_first_line=False):
     """dedent(text, tabsize=8, skip_first_line=False) -> dedented text
 
@@ -511,7 +603,7 @@ def dedent(text, tabsize=8, skip_first_line=False):
         "skip_first_line" is a boolean indicating if the first line should
             be skipped for calculating the indent width and for dedenting.
             This is sometimes useful for docstrings and similar.
-    
+
     textwrap.dedent(s), but don't expand tabs to spaces
     """
     lines = text.splitlines(1)
@@ -533,8 +625,9 @@ def indent(s, width=4, skip_first_line=False):
     else:
         return indentstr + indentstr.join(lines)
 
+
 def walk2(top, topdown=True, onerror=None, followlinks=False,
-        ondecodeerror=None):
+          ondecodeerror=None):
     """A version of `os.walk` that adds support for handling errors for
     files that cannot be decoded with the default encoding. (See bug 82268.)
 
@@ -596,6 +689,7 @@ def walk2(top, topdown=True, onerror=None, followlinks=False,
 #
 def timeit(func):
     clock = (sys.platform == "win32" and time.clock or time.time)
+
     def wrapper(*args, **kw):
         start_time = clock()
         try:
@@ -604,6 +698,7 @@ def timeit(func):
             total_time = clock() - start_time
             print "%s took %.3fs" % (func.func_name, total_time)
     return wrapper
+
 
 def hotshotit(func):
     def wrapper(*args, **kw):
@@ -618,6 +713,8 @@ def hotshotit(func):
     return wrapper
 
 _koCProfiler = None
+
+
 def getProfiler():
     global _koCProfiler
     if _koCProfiler is None:
@@ -629,20 +726,24 @@ def getProfiler():
                 self.prof = cProfile.Profile()
                 if _xpcom_:
                     from xpcom import components
-                    from xpcom.server import WrapObject
-                    _KoCProfileManager._com_interfaces_ = [components.interfaces.nsIObserver]
+                    _KoCProfileManager._com_interfaces_ = [
+                        components.interfaces.nsIObserver]
                     obsSvc = components.classes["@mozilla.org/observer-service;1"].\
-                                   getService(components.interfaces.nsIObserverService)
+                        getService(
+                            components.interfaces.nsIObserverService)
                     obsSvc.addObserver(self, 'xpcom-shutdown', False)
                 else:
                     atexit.register(self.atexit_handler)
+
             def atexit_handler(self):
                 self.prof.print_stats(sort="time")
+
             def observe(self, subject, topic, data):
                 if topic == "xpcom-shutdown":
                     self.atexit_handler()
         _koCProfiler = _KoCProfileManager()
     return _koCProfiler.prof
+
 
 def profile_method(func):
     def wrapper(*args, **kw):
@@ -651,6 +752,8 @@ def profile_method(func):
 
 # Utility functions to perform sorting the same way as scintilla does it
 # for the code-completion list.
+
+
 def OrdPunctLast(value):
     result = []
     value = value.upper()
@@ -663,6 +766,7 @@ def OrdPunctLast(value):
         else:
             result.append(ch)
     return "".join(result)
+
 
 def CompareNPunctLast(value1, value2):
     # value 1 is smaller, return negative
@@ -682,31 +786,11 @@ def make_short_name_dict(names, length=3):
                 outdict[shortname] = [name]
             else:
                 l.append(name)
-        #pprint(outdict)
+        # pprint(outdict)
     for values in outdict.values():
         values.sort(CompareNPunctLast)
     return outdict
 
-#----  cachedmethod from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/325205
-
-def cachedmethod(function):
-    return types.MethodType(Memoize(function), None)
-
-class Memoize:
-    def __init__(self,function):
-        self._cache = {}
-        self._callable = function
-            
-    def __call__(self, *args, **kwds):
-        cache = self._cache
-        key = self._getKey(*args,**kwds)
-        try: return cache[key]
-        except KeyError:
-            cachedValue = cache[key] = self._callable(*args,**kwds)
-            return cachedValue
-    
-    def _getKey(self,*args,**kwds):
-        return kwds and (args, set(kwds)) or args    
 
 def makePerformantLogger(logger):
     """Replaces the info() and debug() methods with dummy methods.
@@ -726,4 +810,3 @@ def makePerformantLogger(logger):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-

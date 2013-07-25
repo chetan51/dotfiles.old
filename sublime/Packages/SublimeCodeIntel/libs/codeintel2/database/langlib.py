@@ -1,26 +1,26 @@
 #!python
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
-# 
+#
 # The contents of this file are subject to the Mozilla Public License
 # Version 1.1 (the "License"); you may not use this file except in
 # compliance with the License. You may obtain a copy of the License at
 # http://www.mozilla.org/MPL/
-# 
+#
 # Software distributed under the License is distributed on an "AS IS"
 # basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
 # License for the specific language governing rights and limitations
 # under the License.
-# 
+#
 # The Original Code is Komodo code.
-# 
+#
 # The Initial Developer of the Original Code is ActiveState Software Inc.
 # Portions created by ActiveState Software Inc are Copyright (C) 2000-2007
 # ActiveState Software Inc. All Rights Reserved.
-# 
+#
 # Contributor(s):
 #   ActiveState Software Inc
-# 
+#
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
 # the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
@@ -32,7 +32,7 @@
 # and other provisions required by the GPL or the LGPL. If you do not delete
 # the provisions above, a recipient may use your version of this file under
 # the terms of any one of the MPL, the GPL or the LGPL.
-# 
+#
 # ***** END LICENSE BLOCK *****
 
 """The langzone of the codeintel database.
@@ -56,19 +56,17 @@ import ciElementTree as ET
 from codeintel2.common import *
 from codeintel2 import util
 from codeintel2.database.util import rmdir
-
+from codeintel2.database.langlibbase import LangDirsLibBase
 
 
 #---- globals
 
 log = logging.getLogger("codeintel.db")
-#log.setLevel(logging.DEBUG)
-
+# log.setLevel(logging.DEBUG)
 
 
 #---- Database zone and lib implementations
-
-class LangDirsLib(object):
+class LangDirsLib(LangDirsLibBase):
     """A zone providing a view into an ordered list of dirs in a
     db/$lang/... area of the db.
 
@@ -86,6 +84,7 @@ class LangDirsLib(object):
       system and will scan it, load it and return the blob for it.
     """
     def __init__(self, lang_zone, lock, lang, name, dirs):
+        LangDirsLibBase.__init__(self)
         self.lang_zone = lang_zone
         self._lock = lock
         self.mgr = lang_zone.mgr
@@ -96,7 +95,6 @@ class LangDirsLib(object):
             = self.mgr.citadel.import_handler_from_lang(self.lang)
 
         self._blob_imports_from_prefix_cache = {}
-        self._have_ensured_scanned_from_dir_cache = {}
         self._importables_from_dir_cache = {}
 
         # We keep a "weak" merged cache of blobname lookup for all dirs
@@ -112,6 +110,7 @@ class LangDirsLib(object):
 
     def _acquire_lock(self):
         self._lock.acquire()
+
     def _release_lock(self):
         self._lock.release()
 
@@ -182,7 +181,7 @@ class LangDirsLib(object):
 
     def blobs_with_basename(self, basename, ctlr=None):
         """Return all blobs that match the given base path.
-        
+
         I.e. a filename lookup across all files in the dirs of this lib.
 
             "basename" is a string, e.g. 'Http.js'
@@ -195,6 +194,7 @@ class LangDirsLib(object):
 
         Returns the empty list if no hits.
         """
+        self.ensure_all_dirs_scanned(ctlr=ctlr)
         blobs = []
         # we can't use self.get_blob because that only returns one answer; we
         # we need all of them.
@@ -202,7 +202,6 @@ class LangDirsLib(object):
         self._acquire_lock()
         try:
             for dir in self.dirs:
-                self.ensure_dir_scanned(dir)
                 dbfile_from_blobname = self.lang_zone.dfb_from_dir(dir, {})
                 blobbase = dbfile_from_blobname.get(basename)
                 if blobbase is not None:
@@ -215,7 +214,7 @@ class LangDirsLib(object):
 
     def hits_from_lpath(self, lpath, ctlr=None, curr_buf=None):
         """Return all hits of the given lookup path.
-        
+
         I.e. a symbol table lookup across all files in the dirs of this
         lib.
 
@@ -236,10 +235,16 @@ class LangDirsLib(object):
         """
         assert isinstance(lpath, tuple)  # common mistake to pass in a string
 
+        # Need to have (at least once) scanned all importables.
+        # Responsibility for ensuring the scan data is *up-to-date*
+        # is elsewhere.
+        self.ensure_all_dirs_scanned(ctlr=ctlr)
+
         if curr_buf:
-            curr_blobname = curr_buf.blob_from_lang.get(self.lang, {}).get("name")
+            curr_blobname = curr_buf.blob_from_lang.get(
+                self.lang, {}).get("name")
             curr_buf_dir = dirname(curr_buf.path)
-        
+
         # Naive implementation (no caching)
         hits = []
         for dir in self.dirs:
@@ -247,13 +252,8 @@ class LangDirsLib(object):
                 log.debug("ctlr aborted")
                 break
 
-            # Need to have (at least once) scanned all importables.
-            # Responsibility for ensuring the scan data is *up-to-date*
-            # is elsewhere.
-            self.ensure_dir_scanned(dir, ctlr=ctlr)
-
             toplevelname_index = self.lang_zone.load_index(
-                    dir, "toplevelname_index", {})
+                dir, "toplevelname_index", {})
             for blobname in toplevelname_index.get_blobnames(lpath[0], ()):
                 if curr_buf and curr_buf_dir == dir and blobname == curr_blobname:
                     continue
@@ -261,20 +261,25 @@ class LangDirsLib(object):
                 try:
                     elem = blob
                     for p in lpath:
-                        #LIMITATION: *Imported* names at each scope are
+                        # LIMITATION: *Imported* names at each scope are
                         # not being included here. This is fine while we
                         # just care about JavaScript.
+                        if curr_buf:
+                            if "__file_local__" in elem.get("attributes", "").split():
+                                # this is a file-local element in a different blob,
+                                # don't look at it
+                                raise KeyError
                         elem = elem.names[p]
                 except KeyError:
                     continue
-                hits.append( (elem, (blob, list(lpath[:-1]))) )
+                hits.append((elem, (blob, list(lpath[:-1]))))
 
         return hits
 
     def toplevel_cplns(self, prefix=None, ilk=None, ctlr=None):
         """Return completion info for all top-level names matching the
         given prefix and ilk in all blobs in this lib.
-        
+
             "prefix" is a 3-character prefix with which to filter top-level
                 names. If None (or not specified), results are not filtered
                 based on the prefix.
@@ -291,6 +296,7 @@ class LangDirsLib(object):
         is required for the different completion evaluators that might use
         this API.
         """
+        self.ensure_all_dirs_scanned(ctlr=ctlr)
         cplns = []
         # Naive implementation (no caching)
         for dir in self.dirs:
@@ -298,11 +304,9 @@ class LangDirsLib(object):
                 log.debug("ctlr aborted")
                 break
 
-            self.ensure_dir_scanned(dir, ctlr=ctlr)
-
             try:
                 toplevelname_index = self.lang_zone.load_index(
-                        dir, "toplevelname_index")
+                    dir, "toplevelname_index")
             except EnvironmentError:
                 # No toplevelname_index for this dir likely indicates that
                 # there weren't any files of the current lang in this dir.
@@ -310,75 +314,13 @@ class LangDirsLib(object):
             cplns += toplevelname_index.toplevel_cplns(prefix=prefix, ilk=ilk)
         return cplns
 
-    def ensure_all_dirs_scanned(self, ctlr=None):
-        """Ensure that all importables in this dir have been scanned
-        into the db at least once.
-
-        Note: This is identical to MultiLangDirsLib.ensure_dir_scanned().
-        Would be good to share.
-        """
-        for dir in self.dirs:
-            if ctlr and ctlr.is_aborted():
-                log.debug("ctlr aborted")
-                break
-            self.ensure_dir_scanned(dir, ctlr)
-
-    def ensure_dir_scanned(self, dir, ctlr=None):
-        """Ensure that all importables in this dir have been scanned
-        into the db at least once.
-
-        Note: This is identical to MultiLangDirsLib.ensure_dir_scanned().
-        Would be good to share.
-        """
-        if dir not in self._have_ensured_scanned_from_dir_cache:
-            event_reported = False
-            res_index = self.lang_zone.load_index(dir, "res_index", {})
-            importables = self._importables_from_dir(dir)
-            importable_values = [i[0] for i in importables.values()
-                                 if i[0] is not None]
-            for base in importable_values:
-                if ctlr and ctlr.is_aborted():
-                    log.debug("ctlr aborted")
-                    return
-                if base not in res_index:
-                    if not event_reported:
-                        self.lang_zone.db.report_event(
-                            "scanning %s files in '%s'" % (self.lang, dir))
-                        event_reported = True
-                    try:
-                        buf = self.mgr.buf_from_path(join(dir, base),
-                                                     lang=self.lang)
-                    except (EnvironmentError, CodeIntelError), ex:
-                        # This can occur if the path does not exist, such as a
-                        # broken symlink, or we don't have permission to read
-                        # the file, or the file does not contain text.
-                        continue
-                    if ctlr is not None:
-                        ctlr.info("load %r", buf)
-                    buf.scan_if_necessary()
-
-            # Remove scanned paths that don't exist anymore.
-            removed_values = set(res_index.keys()).difference(importable_values)
-            for base in removed_values:
-                if ctlr and ctlr.is_aborted():
-                    log.debug("ctlr aborted")
-                    return
-                if not event_reported:
-                    self.lang_zone.db.report_event(
-                        "scanning %s files in '%s'" % (self.lang, dir))
-                    event_reported = True
-                basename = join(dir, base)
-                self.lang_zone.remove_path(basename)
-
-            self._have_ensured_scanned_from_dir_cache[dir] = True
-
     def _importables_from_dir(self, dir):
         if dir not in self._importables_from_dir_cache:
             self._importables_from_dir_cache[dir] \
                 = self.import_handler.find_importables_in_dir(dir)
         return self._importables_from_dir_cache[dir]
 
-    def _dbsubpath_from_blobname(self, blobname, ctlr=None, 
+    def _dbsubpath_from_blobname(self, blobname, ctlr=None,
                                  only_look_in_db=False):
         """Return the subpath to the dbfile for the given blobname,
         or None if not found.
@@ -426,14 +368,14 @@ class LangDirsLib(object):
                     if blobname in dbfile_from_blobname:
                         self._dir_and_blobbase_from_blobname[blobname] \
                             = (blobdir, blobname)
-                        log.debug("have blob '%s' in '%s'? yes (in dir index)", 
+                        log.debug("have blob '%s' in '%s'? yes (in dir index)",
                                   blobname, blobdir)
                         return join(lang_zone.dhash_from_dir(blobdir),
                                     dbfile_from_blobname[blobname])
                 if blobbase in dbfile_from_blobname:
                     self._dir_and_blobbase_from_blobname[blobname] \
                         = (blobdir, blobbase)
-                    log.debug("have blob '%s' in '%s'? yes (in dir index)", 
+                    log.debug("have blob '%s' in '%s'? yes (in dir index)",
                               blobname, blobdir)
                     return join(lang_zone.dhash_from_dir(blobdir),
                                 dbfile_from_blobname[blobbase])
@@ -453,14 +395,16 @@ class LangDirsLib(object):
                 if blobbase not in importables:
                     continue
 
-                blobfile, subdir_blobbase, is_dir_import = importables[blobbase]
+                blobfile, subdir_blobbase, is_dir_import = importables[
+                    blobbase]
                 if blobfile is None:
                     # There isn't an actual importable file here -- just
                     # a dir prefix to a multidir import.
                     log.debug("have blob '%s' in %s? no", blobname, self)
-                    return None
+                    continue
                 elif os.sep in blobfile:
-                    # This is an import from a subdir. We need to get a new dbf.
+                    # This is an import from a subdir. We need to get a new
+                    # dbf.
                     blobdir = join(blobdir, dirname(blobfile))
                     blobfile = basename(blobfile)
                     blobbase = subdir_blobbase
@@ -468,7 +412,7 @@ class LangDirsLib(object):
                     if blobbase in dbfile_from_blobname:
                         self._dir_and_blobbase_from_blobname[blobname] \
                             = (blobdir, blobbase)
-                        log.debug("have blob '%s' in '%s'? yes (in dir index)", 
+                        log.debug("have blob '%s' in '%s'? yes (in dir index)",
                                   blobname, blobdir)
                         return join(lang_zone.dhash_from_dir(blobdir),
                                     dbfile_from_blobname[blobbase])
@@ -481,7 +425,7 @@ class LangDirsLib(object):
                               "attempting load", blobname, blobfile, blobdir)
                     try:
                         buf = self.mgr.buf_from_path(
-                                join(blobdir, blobfile), self.lang)
+                            join(blobdir, blobfile), self.lang)
                     except (EnvironmentError, CodeIntelError), ex:
                         # This can occur if the path does not exist, such as a
                         # broken symlink, or we don't have permission to read
@@ -496,8 +440,9 @@ class LangDirsLib(object):
                         if blobname in dbfile_from_blobname:
                             self._dir_and_blobbase_from_blobname[blobname] \
                                 = (blobdir, blobname)
-                            log.debug("have blob '%s' in '%s'? yes (in dir index)", 
-                                      blobname, blobdir)
+                            log.debug(
+                                "have blob '%s' in '%s'? yes (in dir index)",
+                                blobname, blobdir)
                             return join(lang_zone.dhash_from_dir(blobdir),
                                         dbfile_from_blobname[blobname])
                     if blobbase in dbfile_from_blobname:
@@ -529,18 +474,18 @@ class LangTopLevelNameIndex(object):
     would be too expensive to update this index everytime.
 
     # Solution
-    
+
     Keep a list of "recent updates" and only merge them into the main
     data when that buf hasn't been updated in "a while" and when needed
     for saving the index. Note: Buffer *removals* are not put on-deck,
     but removed immediately.
 
     # .get_blobnames(..., ilk=None)
-    
+
     Originally the toplevelname_index stored {toplevelname -> blobnames}.
     The per-"ilk" level was added afterwards to support occassional ilk
     filtering for PHP (and possible eventually other langs).
-    
+
     .get_blobnames() still behaves like a {toplevelname -> blobnames}
     mapping, but it provides an optional "ilk" keyword arg to limit the
     results to that ilk.
@@ -575,7 +520,7 @@ class LangTopLevelNameIndex(object):
         num_toplevelnames = sum(len(v) for v in self._data.itervalues())
         return ("<LangTopLevelNameIndex: %d top-level name(s), "
                 "%d update(s) on-deck>"
-                    % (num_toplevelnames, len(self._on_deck)))
+                % (num_toplevelnames, len(self._on_deck)))
 
     def merge(self):
         """Merge all on-deck changes with `self.data'."""
@@ -638,7 +583,7 @@ class LangTopLevelNameIndex(object):
                         try:
                             self._data[ilk][toplevelname].remove(blobname)
                         except KeyError:
-                            pass # ignore this for now, might indicate corruption
+                            pass  # ignore this for now, might indicate corruption
                         else:
                             if not self._data[ilk][toplevelname]:
                                 del self._data[ilk][toplevelname]
@@ -735,7 +680,7 @@ class LangTopLevelNameIndex(object):
                 if toplevelname in res_data_pivot[ilk]:
                     blobnames.update(res_data_pivot[ilk][toplevelname])
 
-        #TODO: Put lookup in merged data ahead of lookup in on-deck -- so
+        # TODO: Put lookup in merged data ahead of lookup in on-deck -- so
         #      we don't do on-deck work if not necessary.
         # Then, fallback to already merged data.
         # self._data: {ilk -> toplevelname -> blobnames}
@@ -793,7 +738,6 @@ class LangZone(object):
 
         self._dhash_from_dir_cache = {}
         self._dirslib_cache = {}
-        self._ordered_dirslib_cache_keys = [] # most recent first
 
         # We cache the set of recent indeces and blobs in memory.
         #   {db-subpath: [index-object, <atime>]),
@@ -803,12 +747,12 @@ class LangZone(object):
         #       [<res-index>, 1158289000]),
         #    ...}
         self._index_and_atime_from_dbsubpath = {}
-        #TODO-PERF: Use set() object for this? Compare perf.
-        self._is_index_dirty_from_dbsubpath = {} # set of dirty indeces
-        ##TODO: blob caching and *use* this
-        #self._blob_and_atime_from_dbsubpath = {}
+        # TODO-PERF: Use set() object for this? Compare perf.
+        self._is_index_dirty_from_dbsubpath = {}  # set of dirty indeces
+        # TODO: blob caching and *use* this
+        # self._blob_and_atime_from_dbsubpath = {}
 
-        #XXX Need a 'dirty-set' for blobs? No, because currently
+        # XXX Need a 'dirty-set' for blobs? No, because currently
         #    .update_buf_data() saves blob changes to disk immediately. Not
         #    sure that is best for perf. Definitely not ideal for the
         #    "editset".
@@ -818,6 +762,7 @@ class LangZone(object):
 
     def _acquire_lock(self):
         self._lock.acquire()
+
     def _release_lock(self):
         self._lock.release()
 
@@ -832,8 +777,8 @@ class LangZone(object):
                 fin = open(lang_path, 'r')
             except EnvironmentError, ex:
                 self.db.corruption("LangZone._check_lang",
-                    "could not open `%s': %s" % (lang_path, ex),
-                    "recover")
+                                   "could not open `%s': %s" % (lang_path, ex),
+                                   "recover")
                 fin = open(lang_path, 'w')
                 try:
                     fin.write(lang)
@@ -846,7 +791,7 @@ class LangZone(object):
                     fin.close()
                 assert lang_on_disk == lang
 
-    #TODO: If Database.dhash_from_dir() grows caching, then this
+    # TODO: If Database.dhash_from_dir() grows caching, then this
     #      shouldn't bother.
     def dhash_from_dir(self, dir):
         if dir not in self._dhash_from_dir_cache:
@@ -855,14 +800,14 @@ class LangZone(object):
 
     def dfb_from_dir(self, dir, default=None):
         """Get the {blobname -> dbfile} mapping index for the given dir.
-        
+
         'dfb' stands for 'dbfile_from_blobname'.
         This must be called with the lock held.
         """
         return self.load_index(dir, "blob_index", default)
 
     def get_buf_scan_time(self, buf):
-        #TODO Canonicalize path (or assert that it is canonicalized)
+        # TODO Canonicalize path (or assert that it is canonicalized)
         self._acquire_lock()
         try:
             dir, base = split(buf.path)
@@ -874,7 +819,7 @@ class LangZone(object):
             self._release_lock()
 
     def get_buf_data(self, buf):
-        #TODO Canonicalize path (or assert that it is canonicalized)
+        # TODO Canonicalize path (or assert that it is canonicalized)
         #     Should have a Resource object that we pass around that
         #     handles all of this.
         self._acquire_lock()
@@ -902,18 +847,18 @@ class LangZone(object):
                         blob = self.load_blob(dbsubpath)
                     except ET.XMLParserError, ex:
                         self.db.corruption("LangZone.get_buf_data",
-                            "could not parse dbfile for '%s' blob: %s"\
-                                % (blobname, ex),
-                            "recover")
+                                           "could not parse dbfile for '%s' blob: %s"
+                                           % (blobname, ex),
+                                           "recover")
                         self.remove_buf_data(buf)
                         raise NotFoundInDatabase(
                             "`%s' buffer `%s' blob was corrupted in database"
                             % (buf.path, blobname))
                     except EnvironmentError, ex:
                         self.db.corruption("LangZone.get_buf_data",
-                            "could not read dbfile for '%s' blob: %s"\
-                                % (blobname, ex),
-                            "recover")
+                                           "could not read dbfile for '%s' blob: %s"
+                                           % (blobname, ex),
+                                           "recover")
                         self.remove_buf_data(buf)
                         raise NotFoundInDatabase(
                             "`%s' buffer `%s' blob not found in database"
@@ -928,7 +873,7 @@ class LangZone(object):
 
     def remove_path(self, path):
         """Remove the given resource from the database."""
-        #TODO Canonicalize path (or assert that it is canonicalized)
+        # TODO Canonicalize path (or assert that it is canonicalized)
         #     Should have a Resource object that we pass around that
         #     handles all of this.
         self._acquire_lock()
@@ -946,19 +891,21 @@ class LangZone(object):
                 blob_index = self.load_index(dir, "blob_index")
             except EnvironmentError, ex:
                 self.db.corruption("LangZone.remove_path",
-                    "could not read blob_index for '%s' dir: %s" % (dir, ex),
-                    "recover")
+                                   "could not read blob_index for '%s' dir: %s" % (
+                                       dir, ex),
+                                   "recover")
                 blob_index = {}
 
             is_hits_from_lpath_lang = self.lang in self.db.import_everything_langs
             if is_hits_from_lpath_lang:
                 try:
-                    toplevelname_index = self.load_index(dir, "toplevelname_index")
+                    toplevelname_index = self.load_index(
+                        dir, "toplevelname_index")
                 except EnvironmentError, ex:
                     self.db.corruption("LangZone.remove_path",
-                        "could not read toplevelname_index for '%s' dir: %s"
-                            % (dir, ex),
-                        "recover")
+                                       "could not read toplevelname_index for '%s' dir: %s"
+                                       % (dir, ex),
+                                       "recover")
                     toplevelname_index = self.toplevelname_index_class()
 
             dhash = self.dhash_from_dir(dir)
@@ -969,9 +916,9 @@ class LangZone(object):
                 except KeyError:
                     blob_index_path = join(dhash, "blob_index")
                     self.db.corruption("LangZone.remove_path",
-                        "'%s' blob not in '%s'" \
-                            % (blobname, blob_index_path),
-                        "ignore")
+                                       "'%s' blob not in '%s'"
+                                       % (blobname, blob_index_path),
+                                       "ignore")
                     continue
                 del blob_index[blobname]
                 for path in glob(join(self.base_dir, dhash, dbfile+".*")):
@@ -987,8 +934,8 @@ class LangZone(object):
                 self.changed_index(dir, "toplevelname_index")
         finally:
             self._release_lock()
-        #TODO Database.clean() should remove dirs that have no
-        #     blob_index entries.    
+        # TODO Database.clean() should remove dirs that have no
+        #     blob_index entries.
 
     def remove_buf_data(self, buf):
         """Remove the given buffer from the database."""
@@ -1012,7 +959,7 @@ class LangZone(object):
         """
         self._acquire_lock()
         try:
-            #TODO: Canonicalize path (or assert that it is canonicalized)
+            # TODO: Canonicalize path (or assert that it is canonicalized)
             dir, base = split(buf.path)
 
             # Get the current data, if any.
@@ -1022,8 +969,9 @@ class LangZone(object):
             blob_index_has_changed = False
             is_hits_from_lpath_lang = self.lang in self.db.import_everything_langs
             if is_hits_from_lpath_lang:
-                #TODO: Not sure {} for a default is correct here.
-                toplevelname_index = self.load_index(dir, "toplevelname_index", {})
+                # TODO: Not sure {} for a default is correct here.
+                toplevelname_index = self.load_index(
+                    dir, "toplevelname_index", {})
                 toplevelname_index_has_changed = False
             try:
                 (old_scan_time, old_scan_error, old_res_data) = res_index[base]
@@ -1046,10 +994,15 @@ class LangZone(object):
             if scan_tree:
                 for blob in scan_tree[0]:
                     lang = blob.get("lang")
-                    assert blob.get("lang") == self.lang, "'%s' != '%s' (blob %r)" % (blob.get("lang"), self.lang, blob)
+                    assert blob.get("lang") == self.lang, "'%s' != '%s' (blob %r)" % (
+                        blob.get("lang"), self.lang, blob)
                     blobname = blob.get("name")
-                    toplevelnames_from_ilk = new_res_data.setdefault(blobname, {})
+                    toplevelnames_from_ilk = new_res_data.setdefault(
+                        blobname, {})
                     for toplevelname, elem in blob.names.iteritems():
+                        if "__file_local__" in elem.get("attributes", "").split():
+                            # don't put file local things in toplevel names
+                            continue
                         ilk = elem.get("ilk") or elem.tag
                         if ilk not in toplevelnames_from_ilk:
                             toplevelnames_from_ilk[ilk] = set([toplevelname])
@@ -1060,7 +1013,7 @@ class LangZone(object):
             # Determine necessary changes to res_index.
             if scan_error:
                 if (scan_time != old_scan_time
-                    or scan_error != old_scan_error):
+                        or scan_error != old_scan_error):
                     res_index[base] = (scan_time, scan_error,
                                        old_res_data)
                     res_index_has_changed = True
@@ -1071,7 +1024,7 @@ class LangZone(object):
 
                 if (scan_time != old_scan_time
                     or scan_error != old_scan_error
-                    or new_res_data != old_res_data):
+                        or new_res_data != old_res_data):
                     res_index[base] = (scan_time, scan_error,
                                        new_res_data)
                     res_index_has_changed = True
@@ -1079,7 +1032,7 @@ class LangZone(object):
                 if is_hits_from_lpath_lang:
                     if new_res_data != old_res_data:
                         toplevelname_index.update(base,
-                            old_res_data, new_res_data)
+                                                  old_res_data, new_res_data)
                         toplevelname_index_has_changed = True
 
                 # Determine necessary changes to blob_index and the
@@ -1098,23 +1051,24 @@ class LangZone(object):
                 for action, blobname, blob in dbfile_changes:
                     if action == "add":
                         dbfile = self.db.bhash_from_blob_info(
-                                    buf.path, self.lang, blobname)
+                            buf.path, self.lang, blobname)
                         blob_index[blobname] = dbfile
                         blob_index_has_changed = True
                         dbdir = join(self.base_dir, dhash)
                         if not exists(dbdir):
                             self._mk_dbdir(dbdir, dir)
-                        #XXX What to do on write failure?
+                        # XXX What to do on write failure?
                         log.debug("fs-write: %s blob '%s/%s'",
                                   self.lang, dhash, dbfile)
                         if blob.get("src") is None:
-                            blob.set("src", buf.path)   # for defns_from_pos() support
+                            blob.set(
+                                "src", buf.path)   # for defns_from_pos() support
                         ET.ElementTree(blob).write(join(dbdir, dbfile+".blob"))
                     elif action == "remove":
                         dbfile = blob_index[blobname]
                         del blob_index[blobname]
                         blob_index_has_changed = True
-                        #XXX What to do on removal failure?
+                        # XXX What to do on removal failure?
                         log.debug("fs-write: remove %s blob '%s/%s'",
                                   self.lang, dhash, dbfile)
                         os.remove(join(self.base_dir, dhash, dbfile+".blob"))
@@ -1123,7 +1077,8 @@ class LangZone(object):
                         # different.
                         s = StringIO()
                         if blob.get("src") is None:
-                            blob.set("src", buf.path)   # for defns_from_pos() support
+                            blob.set(
+                                "src", buf.path)   # for defns_from_pos() support
                         ET.ElementTree(blob).write(s)
                         new_dbfile_content = s.getvalue()
                         dbfile = blob_index[blobname]
@@ -1148,7 +1103,7 @@ class LangZone(object):
                         if new_dbfile_content != old_dbfile_content:
                             if not exists(dirname(dbpath)):
                                 self._mk_dbdir(dirname(dbpath), dir)
-                            #XXX What to do if fail to write out file?
+                            # XXX What to do if fail to write out file?
                             log.debug("fs-write: %s blob '%s/%s'",
                                       self.lang, dhash, dbfile)
                             fout = open(dbpath, 'w')
@@ -1165,8 +1120,8 @@ class LangZone(object):
                 self.changed_index(dir, "toplevelname_index")
         finally:
             self._release_lock()
-        #TODO Database.clean() should remove dirs that have no
-        #     blob_index entries.    
+        # TODO Database.clean() should remove dirs that have no
+        #     blob_index entries.
 
     def _mk_zone_skel(self):
         log.debug("fs-write: mkdir '%s'", self.base_dir)
@@ -1215,7 +1170,7 @@ class LangZone(object):
 
         The index is loaded from a pickle on disk, if necessary, put
         into the cache system, and returned.
-        
+
         This must be called with the lock held.
         """
         self._acquire_lock()
@@ -1225,7 +1180,8 @@ class LangZone(object):
             # If index path is in the cache: return it, update its atime.
             now = time.time()
             if dbsubpath in self._index_and_atime_from_dbsubpath:
-                log.debug("cache-read: load %s index '%s'", self.lang, dbsubpath)
+                log.debug(
+                    "cache-read: load %s index '%s'", self.lang, dbsubpath)
                 self._index_and_atime_from_dbsubpath[dbsubpath][1] = now
                 return self._index_and_atime_from_dbsubpath[dbsubpath][0]
 
@@ -1263,7 +1219,7 @@ class LangZone(object):
         try:
             for dbsubpath in self._is_index_dirty_from_dbsubpath:
                 self.save_index(dbsubpath,
-                    self._index_and_atime_from_dbsubpath[dbsubpath][0])
+                                self._index_and_atime_from_dbsubpath[dbsubpath][0])
             self._is_index_dirty_from_dbsubpath = {}
         finally:
             self._release_lock()
@@ -1277,9 +1233,10 @@ class LangZone(object):
         until process completion. The plan is to have a thread
         periodically cull memory.
         """
-        #TODO: Database.cull_mem(). Add it. Get indexer to call it.
-        #TOTEST: Does Python/Komodo actually release this memory or
+        # TOTEST: Does Python/Komodo actually release this memory or
         #        are we kidding ourselves?
+        log.debug("LangZone: culling memory")
+        TIME_SINCE_ACCESS = 300.0  # 5 minutes since last access
         self._acquire_lock()
         try:
             N = 30
@@ -1290,20 +1247,22 @@ class LangZone(object):
             now = time.time()
             for dbsubpath, (index, atime) \
                     in self._index_and_atime_from_dbsubpath.items():
-                if now - atime > 300.0: # >5 minutes since last access
+                if now - atime > TIME_SINCE_ACCESS:
                     if dbsubpath in self._is_index_dirty_from_dbsubpath:
                         self.save_index(dbsubpath, index)
                         del self._is_index_dirty_from_dbsubpath[dbsubpath]
                     del self._index_and_atime_from_dbsubpath[dbsubpath]
+        except:
+            log.exception("Exception culling memory")
         finally:
             self._release_lock()
 
-        #XXX Database.clean(): Go through each $lang/dir/res_index and
+        # XXX Database.clean(): Go through each $lang/dir/res_index and
         #    clean out files in the index but that don't actually exist
         #    anymore.
-        #XXX Database.clean(): drop memory for indeces that are quite
+        # XXX Database.clean(): drop memory for indeces that are quite
         #    old (say haven't been accessed in 20 minutes).
-        #XXX Database.check(): Shouldn't have too many cached indeces in
+        # XXX Database.check(): Shouldn't have too many cached indeces in
         #    memory. How old is the oldest one? Estimate memory size
         #    used by all loaded indeces?
 
@@ -1323,7 +1282,8 @@ class LangZone(object):
                 continue
             path = codecs.open(path_path, encoding="utf-8").read()
             if not exists(path):
-                # Referenced directory no longer exists - so remove the db info.
+                # Referenced directory no longer exists - so remove the db
+                # info.
                 log.debug("clean:: scanned directory no longer exists: %r",
                           path)
                 rmdir(join(base_dir, d))
@@ -1345,7 +1305,7 @@ class LangZone(object):
         long running Komodo profile. Failing that we'll just use N=10.
         """
         assert isinstance(dirs, (tuple, list))
-        canon_dirs = tuple(abspath(normpath(expanduser(d))) for d in dirs)
+        canon_dirs = tuple(set(abspath(normpath(expanduser(d))) for d in dirs))
         if canon_dirs in self._dirslib_cache:
             return self._dirslib_cache[canon_dirs]
 
@@ -1353,13 +1313,40 @@ class LangZone(object):
                                   canon_dirs)
         # Ensure that these directories are all *up-to-date*.
         langdirslib.ensure_all_dirs_scanned()
-        
-        N = 10
-        while len(self._ordered_dirslib_cache_keys) >= N:
-            cache_key = self._ordered_dirslib_cache_keys.pop()
-            del self._dirslib_cache[cache_key]
+
         self._dirslib_cache[canon_dirs] = langdirslib
-        self._ordered_dirslib_cache_keys.insert(0, canon_dirs)
 
         return langdirslib
 
+    def reportMemory(self, reporter, closure=None):
+        """
+        Report on memory usage from this LangZone. See nsIMemoryMultiReporter
+        """
+        log.debug("%s LangZone: reporting memory", self.lang)
+        from xpcom import components
+        kind_other = components.interfaces.nsIMemoryReporter.KIND_OTHER
+        units_count = components.interfaces.nsIMemoryReporter.UNITS_COUNT
+        process = ""
+        reporter.callback(process,
+                          "komodo /codeintel/langzone/%s/index-cache" % (
+                              self.lang,),
+                          kind_other,
+                          units_count,
+                          len(self._index_and_atime_from_dbsubpath),
+                          "Number of cached indices.",
+                          closure)
+
+        # also calculate the size in bytes
+        import memutils
+        total_mem_usage = memutils.memusage(
+            self._index_and_atime_from_dbsubpath)
+        reporter.callback(process,
+                          "explicit/python/codeintel/%s/index-cache" % (
+                              self.lang,),
+                          components.interfaces.nsIMemoryReporter.KIND_HEAP,
+                          components.interfaces.nsIMemoryReporter.UNITS_BYTES,
+                          total_mem_usage,
+                          "The number of bytes of %s codeintel index caches." % (
+                              self.lang,),
+                          closure)
+        return total_mem_usage
