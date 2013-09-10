@@ -1,0 +1,8 @@
+{
+    "repo": "SublimeAStyleFormatter",
+    "name": "SublimeAStyleFormatter",
+    "description": "C/C++/C#/Java code formatter/beautifier with AStyle.",
+    "author": "timonwong",
+    "homepage": "http://timonwong.github.io/SublimeAStyleFormatter/",
+    "platforms": "*"
+}

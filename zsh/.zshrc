@@ -82,7 +82,7 @@ eval "$(fasd --init posix-alias zsh-hook)"
 alias s="subl -n ."
 
 # MacPorts Installer addition on 2009-12-01_at_22:52:56: adding an appropriate PATH variable for use with MacPorts.
-export PATH=$PATH:/opt/local/bin:/opt/local/sbin
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 # Finished adapting your PATH environment variable for use with MacPorts.
 
 [ -s "$HOME/.scm_breeze/scm_breeze.sh" ] && source "$HOME/.scm_breeze/scm_breeze.sh"
