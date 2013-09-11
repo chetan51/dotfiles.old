@@ -63,13 +63,13 @@ export PGDATA=/Library/PostgreSQL/9.1/data
 export GNUTERM=x11
 
 # Setup Amazon EC2 Command-Line Tools
-#export EC2_HOME=~/.ec2
-#export PATH=$PATH:$EC2_HOME/bin
-#export EC2_PRIVATE_KEY=`ls $EC2_HOME/pk-*.pem`
-#export EC2_CERT=`ls $EC2_HOME/cert-*.pem`
-#export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home/
-#export AWS_CREDENTIALS_FILE=~/.ec2/aws-credentials
-#export PERL5LIB=/usr/bin
+export JAVA_HOME="$(/usr/libexec/java_home)"
+export EC2_PRIVATE_KEY="$(/bin/ls "$HOME"/.ec2/pk-*.pem | /usr/bin/head -1)"
+export EC2_CERT="$(/bin/ls "$HOME"/.ec2/cert-*.pem | /usr/bin/head -1)"
+export EC2_HOME="/usr/local/Library/LinkedKegs/ec2-api-tools/jars"
+
+# EC2 aliases
+alias ec2-linguist="ssh -i ~/.ec2/linguist.pem ec2-user@ec2-54-226-204-77.compute-1.amazonaws.com"
 
 # Hadoop
 alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
