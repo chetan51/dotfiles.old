@@ -244,7 +244,7 @@ class).
 
 import sys
 import os
-from os.path import (join, dirname, exists, expanduser, splitext, basename,
+from os.path import (join, dirname, exists, expanduser, expandvars, splitext, basename,
                      split, abspath, isabs, isdir, isfile)
 import cPickle as pickle
 from cPickle import UnpicklingError
@@ -390,7 +390,7 @@ class Database(object):
         self._proj_zone_from_proj_path = weakref.WeakValueDictionary()
 
         if base_dir is None:
-            self.base_dir = expanduser(join("~", ".codeintel"))
+            self.base_dir = expandvars(expanduser(join("~", ".codeintel")))
         elif not isabs(base_dir):
             self.base_dir = abspath(base_dir)
         else:
@@ -448,8 +448,11 @@ class Database(object):
         self.acquire_lock()
         try:
             log.debug("fs-write: create db skeleton in '%s'", self.base_dir)
-            if not exists(self.base_dir):
+            try:
                 os.makedirs(self.base_dir)
+            except:  # in case we had a race somewhere
+                if not isdir(self.base_dir):
+                    raise
             open(join(self.base_dir, "README.txt"), 'w').write(dedent("""
                 This is a database for the Code Intelligence system (a
                 subsystem of SublimeCodeIntel). Do NOT modify anything in here
