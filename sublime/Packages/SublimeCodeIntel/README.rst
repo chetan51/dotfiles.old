@@ -148,6 +148,15 @@ More information in SublimeCodeIntel/CodeIntelSources/`src <https://github.com/S
 
 What's New
 ----------
+v2.0.6 (?):
+
++ Tooltips can use Popups, Output Panel or Status Bar ("popup", "panel", "status" respectively, in the settings)
+
+- Resolved issues with XML and other languages.
+
+- Improved speed by using cache for some things (added zope.cachedescriptors)
+
+
 v2.0.5 (18-09-2013):
 
 - Resolved issues with ST2 in Mac OS X and Windows

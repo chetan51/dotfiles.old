@@ -132,6 +132,8 @@ eval "$(rbenv init -)"
 . ~/.nvm/nvm.sh
 [ -s "/Users/chetansurpur/.scm_breeze/scm_breeze.sh" ] && source "/Users/chetansurpur/.scm_breeze/scm_breeze.sh"
 
+# Autojump
+[[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
 
 # Utilities
 
