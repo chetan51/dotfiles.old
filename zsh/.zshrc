@@ -33,6 +33,11 @@ export INFOPATH=$INFOPATH:/opt/local/share/info
 export CLASSPATH=$CLASSPATH:~/Development/java/junit-4.8.2.jar:~/Development/java/mongo-2.3.jar:~/Development/java/GroboUtils-5/lib/GroboUtils-5-core.jar:~/Development/java/mysql-connector-java-5.1.15/mysql-connector-java-5.1.15-bin.jar
 export NODE_PATH=/Users/Chetan/opt/lib/node:$NODE_PATH
 
+# Humin aliases
+alias hopen='open "$(find ~/Library/Application\ Support/iPhone\ Simulator -name "Humin.app" -print0 | xargs -0 ls -td | head -1 | sed "s#/Humin.app##g")"'
+alias hcd='cd "$(find ~/Library/Application\ Support/iPhone\ Simulator -name "Humin.app" -print0 | xargs -0 ls -td | head -1 | sed "s#/Humin.app##g")"'
+alias hdb='open "$(find ~/Library/Application\ Support/iPhone\ Simulator -name "Humin.app" -print0 | xargs -0 ls -td | head -1 | sed "s#/Humin.app##g")/Library/humin.db"'
+
 # Terminal aliases and functions
 alias o="open"
 function c() { cd "$@"; ls; }
@@ -69,7 +74,7 @@ export EC2_CERT="$(/bin/ls "$HOME"/.ec2/cert-*.pem | /usr/bin/head -1)"
 export EC2_HOME="/usr/local/Library/LinkedKegs/ec2-api-tools/jars"
 
 # EC2 aliases
-alias ec2-linguist="ssh -i ~/.ec2/linguist.pem ec2-user@ec2-54-226-204-77.compute-1.amazonaws.com"
+alias ec2-ai="ssh -i ~/.ec2/ai.pem ec2-user@ec2-54-234-223-235.compute-1.amazonaws.com"
 
 # Hadoop
 alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
