@@ -5,13 +5,15 @@
         "style": "gnu",
         "indent": "spaces",
         "indent-spaces": 2,
-        "align-pointer": "middle"
+        "align-pointer": "middle",
+        "additional_options": ["--style=gnu"]
     },
 
     "options_c++": {
         "style": "gnu",
         "indent": "spaces",
         "indent-spaces": 2,
-        "align-pointer": "middle"
+        "align-pointer": "middle",
+        "additional_options": ["--style=gnu"]
     }
 }

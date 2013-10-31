@@ -25,3 +25,4 @@ for the toggle to be effective in both command mode and insert mode.
 - [@kuroir](https://github.com/kuroir)
 - [@quarnster](https://github.com/quarnster)
 - [@i-akhmadullin](https://github.com/i-akhmadullin)
+- [@dsmatter](https://github.com/dsmatter)

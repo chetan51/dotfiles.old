@@ -23,8 +23,11 @@ SOFTWARE.
 LANGUAGE_MODE_MAPPING = {
     'c': 'c',
     'c++': 'c',
+    'objc': 'c',
+    'objc++': 'c',
     'opencl': 'c',
     'cuda-c++': 'c',
+    'arduino': 'c',
     'java': 'java',
     'cs': 'cs',
     'pde': 'java',
