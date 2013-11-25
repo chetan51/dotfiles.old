@@ -74,7 +74,7 @@ export EC2_CERT="$(/bin/ls "$HOME"/.ec2/cert-*.pem | /usr/bin/head -1)"
 export EC2_HOME="/usr/local/Library/LinkedKegs/ec2-api-tools/jars"
 
 # EC2 aliases
-alias ec2-ai="ssh -i ~/.ec2/ai.pem ec2-user@ec2-54-234-223-235.compute-1.amazonaws.com"
+alias ec2-ai="ssh -i ~/.ec2/ai.pem ec2-user@ec2-54-227-92-167.compute-1.amazonaws.com"
 
 # Hadoop
 alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
@@ -103,7 +103,7 @@ export GOPATH=~/Development/go
 # NuPIC
 export NUPIC=$HOME/Development/nupic
 export NTA=$HOME/Development/nta/eng
-export BUILDDIR=/tmp/ntabuild
+export BUILDDIR=$HOME/Development/ntabuild
 export MK_JOBS=3
 source $NUPIC/env.sh
 

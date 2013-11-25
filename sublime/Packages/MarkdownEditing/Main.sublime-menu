@@ -23,13 +23,35 @@
                             { "caption": "-" },
                             {
                                 "command": "open_file",
+                                "args": {"file": "${packages}/MarkdownEditing/Bold and Italic Markers.tmPreferences"},
+                                "caption": "Bold and Italic Settings – Default"
+                            },
+                            {
+                                "command": "open_file",
+                                "args": {"file": "${packages}/User/Bold and Italic Markers.tmPreferences"},
+                                "caption": "Bold and Italic Settings – User"
+                            },
+                            { "caption": "-" },
+                            {
+                                "command": "open_file",
                                 "args": {"file": "${packages}/MarkdownEditing/Markdown.sublime-settings"},
-                                "caption": "Markdown Settings – Default"
+                                "caption": "Markdown GFM Settings – Default"
                             },
                             {
                                 "command": "open_file",
                                 "args": {"file": "${packages}/User/Markdown.sublime-settings"},
-                                "caption": "Markdown Settings – User"
+                                "caption": "Markdown GFM Settings – User"
+                            },
+                            { "caption": "-" },
+                            {
+                                "command": "open_file",
+                                "args": {"file": "${packages}/MarkdownEditing/Markdown (Standard).sublime-settings"},
+                                "caption": "Markdown (Standard) Settings – Default"
+                            },
+                            {
+                                "command": "open_file",
+                                "args": {"file": "${packages}/User/Markdown (Standard).sublime-settings"},
+                                "caption": "Markdown (Standard) Settings – User"
                             },
                             { "caption": "-" },
                             {
