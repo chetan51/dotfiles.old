@@ -28,3 +28,6 @@
 [submodule "ff"]
 	path = ff
 	url = git://github.com/silentbicycle/ff.git
+[submodule "sublime/Packages/SublimeLinter"]
+	path = sublime/Packages/SublimeLinter
+	url = https://github.com/SublimeLinter/SublimeLinter.git
