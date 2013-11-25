@@ -2,19 +2,12 @@
 	"auto_upgrade_last_run": null,
 	"installed_packages":
 	[
-		"Alignment",
-		"EasyMotion",
-		"Git",
-		"IcedCoffeeScript",
-		"LESS",
 		"MarkdownEditing",
 		"Package Control",
 		"Pretty JSON",
 		"Python PEP8 Autoformat",
-		"Sass",
 		"SublimeAStyleFormatter",
 		"SublimeLinter",
-		"SublimeOnSaveBuild",
 		"Theme - Soda",
 		"Vintage Surround"
 	]
