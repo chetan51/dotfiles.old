@@ -34,9 +34,24 @@ export CLASSPATH=$CLASSPATH:~/Development/java/junit-4.8.2.jar:~/Development/jav
 export NODE_PATH=/Users/Chetan/opt/lib/node:$NODE_PATH
 
 # Humin aliases
-alias hopen='open "$(find ~/Library/Application\ Support/iPhone\ Simulator -name "Humin.app" -print0 | xargs -0 ls -td | head -1 | sed "s#/Humin.app##g")"'
-alias hcd='cd "$(find ~/Library/Application\ Support/iPhone\ Simulator -name "Humin.app" -print0 | xargs -0 ls -td | head -1 | sed "s#/Humin.app##g")"'
-alias hdb='open "$(find ~/Library/Application\ Support/iPhone\ Simulator -name "Humin.app" -print0 | xargs -0 ls -td | head -1 | sed "s#/Humin.app##g")/Library/humin.db"'
+
+alias ohh='open "$(find "/Users/chetansurpur/Library/Application Support/iPhone Simulator" -name "$HUMIN_APP_NAME" -print0 | xargs -0 ls -td | head -1 | sed "s#/$HUMIN_APP_NAME##g")"'
+alias ohd='HUMIN_APP_NAME="Humin Dev.app" && ohh'
+alias ohs='HUMIN_APP_NAME="Humin Staging.app" && ohh'
+alias ohq='HUMIN_APP_NAME="Humin QA.app" && ohh'
+alias ohp='HUMIN_APP_NAME="Humin.app" && ohh'
+ 
+alias chh='cd "$(find "/Users/chetansurpur/Library/Application Support/iPhone Simulator" -name "$HUMIN_APP_NAME" -print0 | xargs -0 ls -td | head -1 | sed "s#/$HUMIN_APP_NAME##g")"'
+alias chd='HUMIN_APP_NAME="Humin Dev.app" && chh'
+alias chs='HUMIN_APP_NAME="Humin Staging.app" && chh'
+alias chq='HUMIN_APP_NAME="Humin QA.app" && chh'
+alias chp='HUMIN_APP_NAME="Humin.app" && chh'
+ 
+alias dbh='open "$(find "/Users/chetansurpur/Library/Application Support/iPhone Simulator" -name "$HUMIN_APP_NAME" -print0 | xargs -0 ls -td | head -1 | sed "s#/$HUMIN_APP_NAME##g")/Library/humin.db"'
+alias dbd='HUMIN_APP_NAME="Humin Dev.app" && dbh'
+alias dbs='HUMIN_APP_NAME="Humin Staging.app" && dbh'
+alias dbq='HUMIN_APP_NAME="Humin QA.app" && dbh'
+alias dbp='HUMIN_APP_NAME="Humin.app" && dbh'
 
 # Terminal aliases and functions
 alias o="open"
