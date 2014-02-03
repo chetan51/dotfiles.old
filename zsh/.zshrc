@@ -88,7 +88,7 @@ export GOPATH=~/Development/go
 # NuPIC
 export NUPIC=$HOME/Development/nupic
 export NTA=$HOME/Development/nta/eng
-export BUILDDIR=$HOME/Development/ntabuild
+export BUILDDIR=/tmp/ntabuild
 export MK_JOBS=3
 source $NUPIC/env.sh
 
