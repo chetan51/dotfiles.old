@@ -10,9 +10,9 @@ ln -s "$DOTFILES/zsh/oh-my-zsh" "$HOME/.oh-my-zsh"
 ln -s "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 
 # Sublime Text
-SUBLIME="$HOME/Library/Application Support/Sublime Text 2"
+SUBLIME="$HOME/Library/Application Support/Sublime Text 3"
 mkdir -p "$SUBLIME/old"
-for directory in "Packages" "Installed Packages" "Pristine Packages"
+for directory in "Packages" "Installed Packages"
 do
 	mv "$SUBLIME/$directory" "$SUBLIME/old"
 	ln -s "$DOTFILES/sublime/$directory" "$SUBLIME"
