@@ -21,8 +21,8 @@ done
 PREFERENCES="$HOME/Library/Preferences"
 # iTerm
 mkdir -p "$PREFERENCES/old"
-mv "$PREFERENCES/net.sourceforge.iTerm.plist" "$PREFERENCES/old"
-ln -s "$DOTFILES/zsh/iterm/net.sourceforge.iTerm.plist" "$PREFERENCES"
+mv "$PREFERENCES/com.googlecode.iterm2.plist" "$PREFERENCES/old"
+ln -s "$DOTFILES/iterm/com.googlecode.iterm2.plist" "$PREFERENCES"
 
 # tig
 ln -s "$DOTFILES/tig/.tigrc" "$HOME/.tigrc"
