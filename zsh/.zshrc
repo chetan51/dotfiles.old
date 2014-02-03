@@ -30,28 +30,7 @@ export PATH=$HOME/bin:$PATH:/opt/local/bin:~/opt/bin:~/.gem/ruby/1.8/bin:
 export PATH=$PATH:/usr/local/Cellar/mongodb/2.0.4-x86_64/bin
 export MANPATH=$MANPATH:/opt/local/share/man
 export INFOPATH=$INFOPATH:/opt/local/share/info
-export CLASSPATH=$CLASSPATH:~/Development/java/junit-4.8.2.jar:~/Development/java/mongo-2.3.jar:~/Development/java/GroboUtils-5/lib/GroboUtils-5-core.jar:~/Development/java/mysql-connector-java-5.1.15/mysql-connector-java-5.1.15-bin.jar
-export NODE_PATH=/Users/Chetan/opt/lib/node:$NODE_PATH
 
-# Humin aliases
-
-alias ohh='open "$(find "/Users/chetansurpur/Library/Application Support/iPhone Simulator" -name "$HUMIN_APP_NAME" -print0 | xargs -0 ls -td | head -1 | sed "s#/$HUMIN_APP_NAME##g")"'
-alias ohd='HUMIN_APP_NAME="Humin Dev.app" && ohh'
-alias ohs='HUMIN_APP_NAME="Humin Staging.app" && ohh'
-alias ohq='HUMIN_APP_NAME="Humin QA.app" && ohh'
-alias ohp='HUMIN_APP_NAME="Humin.app" && ohh'
- 
-alias chh='cd "$(find "/Users/chetansurpur/Library/Application Support/iPhone Simulator" -name "$HUMIN_APP_NAME" -print0 | xargs -0 ls -td | head -1 | sed "s#/$HUMIN_APP_NAME##g")"'
-alias chd='HUMIN_APP_NAME="Humin Dev.app" && chh'
-alias chs='HUMIN_APP_NAME="Humin Staging.app" && chh'
-alias chq='HUMIN_APP_NAME="Humin QA.app" && chh'
-alias chp='HUMIN_APP_NAME="Humin.app" && chh'
- 
-alias dbh='open "$(find "/Users/chetansurpur/Library/Application Support/iPhone Simulator" -name "$HUMIN_APP_NAME" -print0 | xargs -0 ls -td | head -1 | sed "s#/$HUMIN_APP_NAME##g")/Library/humin.db"'
-alias dbd='HUMIN_APP_NAME="Humin Dev.app" && dbh'
-alias dbs='HUMIN_APP_NAME="Humin Staging.app" && dbh'
-alias dbq='HUMIN_APP_NAME="Humin QA.app" && dbh'
-alias dbp='HUMIN_APP_NAME="Humin.app" && dbh'
 
 # Terminal aliases and functions
 alias o="open"
@@ -81,15 +60,6 @@ export PGDATA=/Library/PostgreSQL/9.1/data
 
 # Octave
 export GNUTERM=x11
-
-# Setup Amazon EC2 Command-Line Tools
-export JAVA_HOME="$(/usr/libexec/java_home)"
-export EC2_PRIVATE_KEY="$(/bin/ls "$HOME"/.ec2/pk-*.pem | /usr/bin/head -1)"
-export EC2_CERT="$(/bin/ls "$HOME"/.ec2/cert-*.pem | /usr/bin/head -1)"
-export EC2_HOME="/usr/local/Library/LinkedKegs/ec2-api-tools/jars"
-
-# EC2 aliases
-alias ec2-ai="ssh -i ~/.ec2/ai.pem ec2-user@ec2-54-227-92-167.compute-1.amazonaws.com"
 
 # Hadoop
 alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
@@ -150,7 +120,6 @@ eval "$(rbenv init -)"
 
 # nvm
 . ~/.nvm/nvm.sh
-[ -s "/Users/chetansurpur/.scm_breeze/scm_breeze.sh" ] && source "/Users/chetansurpur/.scm_breeze/scm_breeze.sh"
 
 # Autojump
 [[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
