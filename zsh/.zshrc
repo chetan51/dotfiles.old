@@ -122,9 +122,6 @@ eval "$(rbenv init -)"
 # nvm
 . ~/.nvm/nvm.sh
 
-# Autojump
-[[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
-
 # Utilities
 
 function acks {
