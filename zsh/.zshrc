@@ -93,6 +93,9 @@ export BUILDDIR=/tmp/ntabuild
 export MK_JOBS=3
 source $NUPIC/env.sh
 
+# AWS
+source $HOME/.aws/.awsrc
+
 # Use modern completion system
 autoload -Uz compinit
 compinit
