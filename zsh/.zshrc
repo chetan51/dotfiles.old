@@ -93,6 +93,9 @@ export BUILDDIR=/tmp/ntabuild
 export MK_JOBS=3
 source $NUPIC/env.sh
 
+# Grok
+export GROK_CONFIG_PATH=$HOME/Development/grok/conf
+
 # AWS
 source $HOME/.aws/.awsrc
 
