@@ -46,7 +46,8 @@ alias chrome-dev="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google
 alias chetansurpur="ssh root@chetansurpur.com"
 
 # Python stuff
-export PYTHONPATH=$PYTHONPATH:/Library/Python/2.6/site-packages:/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages/
+export PYTHONPATH=$PYTHONPATH:/Library/Python/2.7/site-packages:/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/:$HOME/Library/Python/2.7/lib/python/site-packages
+export PATH=$PATH:$HOME/Library/Python/2.7/bin
 
 # MySQL aliases
 alias mysql-start="sudo /opt/local/etc/LaunchDaemons/org.macports.mysql5/mysql5.wrapper start"
