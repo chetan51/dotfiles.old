@@ -1,7 +1,5 @@
 {
-    // Tab and whitespace handling
-    // Indent using spaces, 4 spaces ber indent by default
-    "tab_size": 4,
+    "tab_size": 2,
     "translate_tabs_to_spaces": true,
     "trim_automatic_white_space": true
 }
