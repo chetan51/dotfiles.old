@@ -108,6 +108,8 @@ if [[ ! "$PATH" =~ "$GROKPROJECTS/gef/grokcli:" ]]; then
     export PATH=$GROKPROJECTS/gef/grokcli:$PATH
 fi
 
+export PYTHONPATH=$HOME/Development/grok/grok:$PYTHONPATH
+
 # AWS
 source $HOME/.aws/.awsrc
 
