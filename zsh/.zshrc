@@ -99,6 +99,15 @@ source $NUPIC/env.sh
 # Grok
 export GROK_CONFIG_PATH=$HOME/Development/grok/conf
 
+export GROKPROJECTS=$HOME/Development/grok-projects
+if [[ ! "$PYTHONPATH" =~ "$GROKPROJECTS:" ]]; then
+    export PYTHONPATH=$GROKPROJECTS:$PYTHONPATH
+fi
+
+if [[ ! "$PATH" =~ "$GROKPROJECTS/gef/grokcli:" ]]; then
+    export PATH=$GROKPROJECTS/gef/grokcli:$PATH
+fi
+
 # AWS
 source $HOME/.aws/.awsrc
 
