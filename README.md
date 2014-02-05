@@ -4,13 +4,13 @@ First get [Homebrew](http://mxcl.github.com/homebrew/) and [Sublime Text](http:/
 
 Then:
 
-	brew install zsh
-	chsh -s /bin/zsh
+    brew install zsh
+    chsh -s /bin/zsh
 
-	git clone git://github.com/chetan51/dotfiles.git && cd dotfiles
-	git submodule update --init --recursive
-	./install
-	./scm_breeze/install.sh
+    git clone git://github.com/chetan51/dotfiles.git && cd dotfiles
+    git submodule update --init --recursive
+    ./install
+    ./scm_breeze/install.sh
     brew install tig
     cd ff
     make
