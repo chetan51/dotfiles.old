@@ -12,6 +12,7 @@ Then:
     ./install
     ./scm_breeze/install.sh
     brew install tig
+    brew install hub
     cd ff
     make
     ln -s ~/dotfiles/ff/ff /usr/local/bin/ff

@@ -82,6 +82,7 @@ export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 [ -s "$HOME/.scm_breeze/scm_breeze.sh" ] && source "$HOME/.scm_breeze/scm_breeze.sh"
 
 # Git aliases
+alias git=hub
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gpr="git pull --rebase"
 alias gpu="git push"
