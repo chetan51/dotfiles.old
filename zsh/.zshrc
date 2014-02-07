@@ -93,6 +93,7 @@ export NUPIC=$HOME/Development/nupic
 export NTA=$HOME/Development/nta/eng
 export BUILDDIR=/tmp/ntabuild
 export MK_JOBS=3
+export NTAX_DEVELOPER_BUILD=1
 source $NUPIC/env.sh
 
 # Grok
