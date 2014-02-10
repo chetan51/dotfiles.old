@@ -110,6 +110,8 @@ fi
 
 export PYTHONPATH=$HOME/Development/grok/grok:$PYTHONPATH
 
+source $HOME/.grok/.grokrc
+
 # AWS
 source $HOME/.aws/.awsrc
 
