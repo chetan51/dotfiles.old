@@ -14,6 +14,9 @@ export ZSH_THEME="robbyrussell"
 # Uncomment following line if you want to disable colors in ls
 # export DISABLE_LS_COLORS="true"
 
+# Enable bash-style comments
+setopt interactivecomments
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(rails git ruby osx)
@@ -91,8 +94,6 @@ export GOPATH=~/Development/go
 # NuPIC
 export NUPIC=$HOME/Development/nupic
 export NTA=$HOME/Development/nta/eng
-export BUILDDIR=/tmp/ntabuild
-export MK_JOBS=3
 export NTAX_DEVELOPER_BUILD=1
 source $NUPIC/env.sh
 
