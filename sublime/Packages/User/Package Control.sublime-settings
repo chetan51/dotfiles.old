@@ -8,6 +8,8 @@
 		"Pylinter",
 		"SublimeAStyleFormatter",
 		"SublimeGit",
+		"SublimeLinter",
+		"SublimeLinter-jshint",
 		"Theme - Soda"
 	]
 }
