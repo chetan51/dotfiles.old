@@ -5,11 +5,11 @@
 		"MarkdownEditing",
 		"Package Control",
 		"Pretty JSON",
-		"Pylinter",
 		"SublimeAStyleFormatter",
 		"SublimeGit",
 		"SublimeLinter",
 		"SublimeLinter-jshint",
+		"SublimeLinter-pylint",
 		"Theme - Soda"
 	]
 }
