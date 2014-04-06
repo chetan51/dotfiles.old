@@ -6,8 +6,11 @@ ln -s "$DOTFILES/vim" "$HOME/.vim"
 ln -s "$DOTFILES/vim/.vimrc" "$HOME/.vimrc"
 
 # ZSH
-ln -s "$DOTFILES/zsh/oh-my-zsh" "$HOME/.oh-my-zsh"
-ln -s "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
+ln -s "$DOTFILES/zsh/prezto" "$HOME/.zprezto"
+setopt EXTENDED_GLOB
+for rcfile in $DOTFILES/zsh/runcoms/*; do
+  ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+done
 
 # Sublime Text
 SUBLIME="$HOME/Library/Application Support/Sublime Text 3"
