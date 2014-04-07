@@ -11,6 +11,9 @@ setopt EXTENDED_GLOB
 for rcfile in $DOTFILES/zsh/runcoms/*; do
   ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
 done
+for rcfile in $DOTFILES/zsh/themes/*; do
+  ln -s "$rcfile" "$HOME/.zprezto/modules/prompt/functions/${rcfile:t}"
+done
 
 # Sublime Text
 SUBLIME="$HOME/Library/Application Support/Sublime Text 3"
