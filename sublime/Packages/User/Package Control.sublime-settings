@@ -7,9 +7,6 @@
 		"Pretty JSON",
 		"SublimeAStyleFormatter",
 		"SublimeGit",
-		"SublimeLinter",
-		"SublimeLinter-jshint",
-		"SublimeLinter-pylint",
 		"Theme - Soda"
 	]
 }
