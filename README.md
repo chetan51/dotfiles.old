@@ -10,9 +10,6 @@ Then:
     git clone git://github.com/chetan51/dotfiles.git && cd dotfiles
     git submodule update --init --recursive
     ./install
-    ./scm_breeze/install.sh
     brew install tig
     brew install hub
-    cd ff
-    make
-    ln -s ~/dotfiles/ff/ff /usr/local/bin/ff
+    brew install fasd
