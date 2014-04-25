@@ -12,15 +12,6 @@ setopt interactivecomments
 # pyenv setup
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 
-# Customize to your needs...
-export PATH=/Library/PostgreSQL/9.1/bin:$PATH
-export PATH=$HOME/bin:$PATH:/opt/local/bin:~/opt/bin:~/.gem/ruby/1.8/bin:
-#export PATH=/usr/bin:/sw/bin:/sw/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/X11R6/bin:~/opt/bin
-export PATH=$PATH:/usr/local/Cellar/mongodb/2.0.4-x86_64/bin
-export MANPATH=$MANPATH:/opt/local/share/man
-export INFOPATH=$INFOPATH:/opt/local/share/info
-
-
 # Terminal aliases and functions
 alias o="open"
 function c() { cd "$@"; ls; }
@@ -33,14 +24,6 @@ alias chrome-dev="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google
 
 # ChetanSurpur.com aliases
 alias chetansurpur="ssh root@chetansurpur.com"
-
-# Python stuff
-export PYTHONPATH=$PYTHONPATH:/Library/Python/2.7/site-packages:/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/:$HOME/Library/Python/2.7/lib/python/site-packages
-export PATH=$PATH:$HOME/Library/Python/2.7/bin
-
-# MySQL aliases
-alias mysql-start="sudo /opt/local/etc/LaunchDaemons/org.macports.mysql5/mysql5.wrapper start"
-alias mysql-stop="sudo /opt/local/etc/LaunchDaemons/org.macports.mysql5/mysql5.wrapper stop"
 
 # Mac aliases
 alias ql="qlmanage -p"
@@ -55,18 +38,14 @@ export GNUTERM=x11
 alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
 alias hadoop-stop="/usr/local/Cellar/hadoop/1.0.3/bin/stop-all.sh"
 
+# Python
+export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/python2.7/site-packages
+
 # Fasd
 eval "$(fasd --init posix-alias zsh-hook)"
 
 # Sublime Text aliases
 alias s="subl -n ."
-
-# Araxis Merge
-export PATH=$PATH:/Applications/Araxis\ Merge.app/Contents/Utilities
-
-# MacPorts Installer addition on 2009-12-01_at_22:52:56: adding an appropriate PATH variable for use with MacPorts.
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-# Finished adapting your PATH environment variable for use with MacPorts.
 
 # Git aliases
 alias git=hub
@@ -85,25 +64,10 @@ export PYTHONPATH=$PYTHONPATH:$NTA/lib/python2.7/site-packages
 #export NTAX_DEVELOPER_BUILD=1
 
 # Grok
-export GROK_CONFIG_PATH=$HOME/Development/grok/conf
-
-export GROKPROJECTS=$HOME/Development/grok-projects
-if [[ ! "$PYTHONPATH" =~ "$GROKPROJECTS:" ]]; then
-    export PYTHONPATH=$GROKPROJECTS:$PYTHONPATH
-fi
-
-if [[ ! "$PATH" =~ "$GROKPROJECTS/gef/grokcli:" ]]; then
-    export PATH=$GROKPROJECTS/gef/grokcli:$PATH
-fi
-
-export PYTHONPATH=$HOME/Development/grok/grok:$PYTHONPATH
-
 source $HOME/.grok/.grokrc
 
 # AWS
 source $HOME/.aws/.awsrc
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
 # rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
