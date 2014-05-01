@@ -118,7 +118,7 @@
     ],
     "command": "scroll_lines",
     "args": {
-      "amount": -40.0
+      "amount": -20.0
     },
     "context": [
       {
@@ -132,7 +132,7 @@
     ],
     "command": "scroll_lines",
     "args": {
-      "amount": 40.0
+      "amount": 20.0
     },
     "context": [
       {
