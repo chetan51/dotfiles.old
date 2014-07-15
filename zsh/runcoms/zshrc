@@ -58,10 +58,6 @@ export GOPATH=~/Development/go
 
 # NuPIC
 export NUPIC=$HOME/Development/nupic
-export NTA=$NUPIC/build/release
-export NTA_ROOT_DIR=$NTA
-export PYTHONPATH=$PYTHONPATH:$NTA/lib/python2.7/site-packages
-#export NTAX_DEVELOPER_BUILD=1
 
 # Grok
 source $HOME/.grok/.grokrc
