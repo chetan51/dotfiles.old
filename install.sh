@@ -40,3 +40,6 @@ ln -s "$DOTFILES/ruby-build" "$HOME/.rbenv/plugins"
 
 # nvm
 ln -s "$DOTFILES/nvm" "$HOME/.nvm"
+
+# tmux
+ln -s "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf"
