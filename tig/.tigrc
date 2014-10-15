@@ -1,10 +1,5 @@
-bind main k move-down
-bind diff k move-down
-bind main K scroll-page-down
-bind diff K scroll-page-down
-bind main h move-up
-bind diff h move-up
-bind main H scroll-page-up
-bind diff H scroll-page-up
-
-set show-id = true
+bind generic k move-down
+bind generic K scroll-page-down
+bind generic h move-up
+bind generic H scroll-page-up
+bind generic I :toggle id
