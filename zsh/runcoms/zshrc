@@ -15,6 +15,7 @@ if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # Terminal aliases and functions
 alias o="open"
 function c() { cd "$@"; ls; }
+alias name="tmux rename-window"
 
 # Shortcut aliases
 alias chrome-dev="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --allow-file-access-from-files"
@@ -74,3 +75,8 @@ eval "$(rbenv init -)"
 
 # SCM Breeze
 [ -s "$HOME/.scm_breeze/scm_breeze.sh" ] && source "$HOME/.scm_breeze/scm_breeze.sh"
+
+# Powerline
+if [[ -r ~/.local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh ]]; then
+    source ~/.local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+fi
