@@ -27,6 +27,9 @@ import sys
 import tempfile
 from xml.etree import ElementTree
 
+if sublime.platform() != 'windows':
+    import pwd
+
 #
 # Public constants
 #
@@ -188,7 +191,12 @@ def get_rc_settings(start_dir, limit=None):
 
 
 def generate_color_scheme(from_reload=True):
-    """Asynchronously call generate_color_scheme_async."""
+    """
+    Asynchronously call generate_color_scheme_async.
+
+    from_reload is True if this is called from the change callback for user settings.
+
+    """
 
     # If this was called from a reload of prefs, turn off the prefs observer,
     # otherwise we'll end up back here when ST updates the prefs with the new color.
@@ -208,12 +216,24 @@ def generate_color_scheme_async():
     """
     Generate a modified copy of the current color scheme that contains SublimeLinter color entries.
 
-    from_reload is True if this is called from the change callback for user settings.
-
     The current color scheme is checked for SublimeLinter color entries. If any are missing,
     the scheme is copied, the entries are added, and the color scheme is rewritten to Packages/User.
 
     """
+
+    # First make sure the user prefs are valid. If not, bail.
+    path = os.path.join(sublime.packages_path(), 'User', 'Preferences.sublime-settings')
+
+    if (os.path.isfile(path)):
+        try:
+            with open(path, mode='r') as f:
+                json = f.read()
+
+            sublime.decode_value(json)
+        except:
+            from . import persist
+            persist.printf('generate_color_scheme: Preferences.sublime-settings invalid, aborting')
+            return
 
     prefs = sublime.load_settings('Preferences.sublime-settings')
     scheme = prefs.get('color_scheme')
@@ -976,7 +996,7 @@ def find_windows_python(version):
         stripped_version = version.replace('.', '')
         prefix = os.path.abspath('\\Python')
         prefix_len = len(prefix)
-        dirs = glob(prefix + '*')
+        dirs = sorted(glob(prefix + '*'), reverse=True)
         from . import persist
 
         # Try the exact version first, then the major version
@@ -1174,14 +1194,33 @@ def communicate(cmd, code=None, output_stream=STREAM_STDOUT, env=None):
 
 def create_tempdir():
     """Create a directory within the system temp directory used to create temp files."""
-    if os.path.isdir(tempdir):
-        shutil.rmtree(tempdir)
+    try:
+        if os.path.isdir(tempdir):
+            shutil.rmtree(tempdir)
 
-    os.mkdir(tempdir)
+        os.mkdir(tempdir)
 
-    # Make sure the directory can be removed by anyone in case the user
-    # runs ST later as another user.
-    os.chmod(tempdir, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+        # Make sure the directory can be removed by anyone in case the user
+        # runs ST later as another user.
+        os.chmod(tempdir, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+
+    except PermissionError:
+        if sublime.platform() != 'windows':
+            current_user = pwd.getpwuid(os.geteuid())[0]
+            temp_uid = os.stat(tempdir).st_uid
+            temp_user = pwd.getpwuid(temp_uid)[0]
+            message = (
+                'The SublimeLinter temp directory:\n\n{0}\n\ncould not be cleared '
+                'because it is owned by \'{1}\' and you are logged in as \'{2}\'. '
+                'Please use sudo to remove the temp directory from a terminal.'
+            ).format(tempdir, temp_user, current_user)
+        else:
+            message = (
+                'The SublimeLinter temp directory ({}) could not be reset '
+                'because it belongs to a different user.'
+            ).format(tempdir)
+
+        sublime.error_message(message)
 
     from . import persist
     persist.debug('temp directory:', tempdir)
