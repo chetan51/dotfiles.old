@@ -15,7 +15,6 @@ if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # Terminal aliases and functions
 alias o="open"
 function c() { cd "$@"; ls; }
-alias name="tmux rename-window"
 
 # Shortcut aliases
 alias chrome-dev="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --allow-file-access-from-files"
