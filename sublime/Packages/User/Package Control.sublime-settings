@@ -2,6 +2,7 @@
 	"auto_upgrade_last_run": null,
 	"installed_packages":
 	[
+		"Anaconda",
 		"MarkdownEditing",
 		"Origami",
 		"Package Control",
@@ -10,7 +11,6 @@
 		"SublimeGit",
 		"SublimeLinter",
 		"SublimeLinter-jshint",
-		"SublimeLinter-pylint",
 		"Theme - Soda",
 		"Trimmer"
 	]

@@ -1,0 +1,27 @@
+{
+    /*
+        Use PyLint instead of PyFlakes and PEP-8
+
+        **** WARNING ****
+
+        - If you set this value as true, PyFlakes and pep8 will not bet used
+        - PyLint does *NOT* support lint buffers that are not already saved in
+          the file system
+
+        **** WARNING ****
+    */
+    "use_pylint": true,
+
+    // Set this to false to turn pep8 checking off completely
+    "pep8": false,
+
+    /*
+        If complete_parameters is true, anaconda will add function and class
+        parameters to its completions.
+
+        If complete_all_parameters is true, it will add all the possible
+        parameters, if it's false, it will add only required parameters
+    */
+    "complete_parameters": true,
+    "complete_all_parameters": false,
+}
