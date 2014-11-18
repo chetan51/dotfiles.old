@@ -24,4 +24,7 @@
     */
     "complete_parameters": true,
     "complete_all_parameters": false,
+
+    /* This is the delimiter between the module and the class */
+    "test_delimeter": ".",
 }
