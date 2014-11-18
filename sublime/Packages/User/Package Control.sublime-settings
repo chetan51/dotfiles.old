@@ -3,6 +3,7 @@
 	"installed_packages":
 	[
 		"Anaconda",
+		"GitGutter",
 		"MarkdownEditing",
 		"Package Control",
 		"Pretty JSON",
