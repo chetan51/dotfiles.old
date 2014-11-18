@@ -1,0 +1,16 @@
+{
+    // Whether or not to automatically show the output panel.
+    // If set to false, the default key-binding alt+d,alt+p
+    // will show it
+    "show_output_panel": false,
+
+    // Whether or not to show the clang parser status in the status bar
+    "show_status": false,
+
+    // When set to true, will display visual error markers.
+    "show_visual_error_marks": false,
+
+    // Scope used for warning markers
+    "marker_warning_scope": "invalid",
+
+}
