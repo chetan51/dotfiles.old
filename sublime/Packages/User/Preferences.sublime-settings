@@ -10,5 +10,6 @@
 	"tab_size": 4,
 	"theme": "Soda Dark.sublime-theme",
 	"vintage_start_in_command_mode": true,
-	"vintage_use_clipboard": true
+	"vintage_use_clipboard": true,
+	"rulers": [80],
 }
