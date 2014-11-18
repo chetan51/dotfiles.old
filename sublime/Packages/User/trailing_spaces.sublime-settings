@@ -1,0 +1,12 @@
+{
+    // By default, nothing happens on save.
+    // Set to true to trim trailing spaces before saving, with respect to the
+    // other settings.
+    "trailing_spaces_trim_on_save": true,
+
+    // By default, trailing spaces are deleted within the whole document.
+    // Set to true to affect only the lines you edited since last save.
+    // Trailing spaces will still be searched for and highlighted in the whole
+    // document.
+    "trailing_spaces_modified_lines_only": true,
+}
