@@ -1,0 +1,4 @@
+{
+	"glue_shellpath" : "/bin/zsh",
+	"glue_userpath" : "/Users/Chetan/.rbenv/shims:/Users/Chetan/.rbenv/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin",
+}

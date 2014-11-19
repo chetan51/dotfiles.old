@@ -1,5 +1,4 @@
 {
-	"theme": "Spacegray.sublime-theme",
 	"color_scheme": "Packages/User/base16-ocean.dark (SL).tmTheme",
 	"font_size": 17.0,
 	"ignored_packages":
@@ -13,6 +12,7 @@
 	],
 	"save_on_focus_lost": true,
 	"tab_size": 4,
+	"theme": "Spacegray.sublime-theme",
 	"vintage_start_in_command_mode": true,
 	"vintage_use_clipboard": true
 }
