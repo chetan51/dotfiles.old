@@ -9,4 +9,9 @@
     // Trailing spaces will still be searched for and highlighted in the whole
     // document.
     "trailing_spaces_modified_lines_only": true,
+
+    // By default, the line being currently edited will have its trailing
+    // spaces highlighted.
+    // Set to false to ignore trailing spaces on the edited line.
+    "trailing_spaces_include_current_line" : false,
 }
