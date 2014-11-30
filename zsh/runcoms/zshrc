@@ -53,11 +53,8 @@ alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgree
 alias gpr="git pull --rebase"
 alias gpu="git push"
 
-# Go
-export GOPATH=~/Development/go
-
 # NuPIC
-export NUPIC=$HOME/Development/nupic
+export NUPIC=$HOME/Dropbox/Development/nupic
 
 # Grok
 source $HOME/.grok/.grokrc
