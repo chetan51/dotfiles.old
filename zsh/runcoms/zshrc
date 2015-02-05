@@ -61,6 +61,9 @@ export NUPIC=$HOME/Dropbox/Development/nupic
 # Grok
 source $HOME/.grok/.grokrc
 
+# Taurus
+export TAURUS_RMQ_METRIC_DEST="127.0.0.1:2003"
+
 # AWS
 source $HOME/.aws/.awsrc
 
