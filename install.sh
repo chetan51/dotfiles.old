@@ -5,6 +5,9 @@ DOTFILES=`pwd`
 ln -s "$DOTFILES/vim" "$HOME/.vim"
 ln -s "$DOTFILES/vim/.vimrc" "$HOME/.vimrc"
 
+mkdir -p "$DOTFILES/matplotlib"
+ln -s "$DOTFILES/matplotlib/matplotlibrc" "$HOME/.matplotlib/matplotlibrc"
+
 # ZSH
 ln -s "$DOTFILES/zsh/prezto" "$HOME/.zprezto"
 setopt EXTENDED_GLOB
