@@ -239,6 +239,14 @@
     "anaconda_linter_underlines": true,
 
     /*
+        If anaconda_linter_show_errors_on_save is set to true, anaconda
+        will show a list of errors when the user save the file
+
+        This is disabled by default
+    */
+    "anaconda_linter_show_errors_on_save": false,
+
+    /*
         Use PyLint instead of PyFlakes and PEP-8
 
         **** WARNING ****
@@ -421,6 +429,15 @@
                 "test_command": "./manage.py test --settings=tests.settings --noinput"
             }
     */
+
+    /*
+        Theme to use in the output panel.
+
+        Uncomment the line below to override the default tests runner
+        output, by default the theme is PythonConsoleDark.hidden-tmTheme
+        NOTE: The file specified here **MUST** exists in `Packages/Anaconda`
+    */
+    //"test_runner_theme": "PythonConsoleDark.hidden-tmTheme",
 
     /*
         Uncomment the line below to execute any command before try to execute

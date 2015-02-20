@@ -63,6 +63,8 @@ source $HOME/.grok/.grokrc
 
 # Taurus
 export TAURUS_RMQ_METRIC_DEST="127.0.0.1:2003"
+#export TAURUS_HTM_SERVER="127.0.0.1"
+export APPLICATION_CONFIG_PATH=/Users/Chetan/Dropbox/Development/products/taurus/conf-user
 
 # AWS
 source $HOME/.aws/.awsrc
