@@ -37,7 +37,6 @@ PY3 = True if sys.version_info >= (3,) else False
 
 
 class JSONHandler(asynchat.async_chat):
-
     """Hadnles JSON messages from a client
     """
 
@@ -115,7 +114,6 @@ class JSONHandler(asynchat.async_chat):
 
 
 class JSONServer(asyncore.dispatcher):
-
     """Asynchronous standard library TCP JSON server
     """
 
@@ -163,7 +161,6 @@ class JSONServer(asyncore.dispatcher):
 
 
 class Checker(threading.Thread):
-
     """Check that the ST3 PID already exists every delta seconds
     """
 
@@ -209,13 +206,25 @@ class Checker(threading.Thread):
             # we need something that always work so we are forced here to use
             # the Windows tasklist command and check its output
             startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            try:
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            except AttributeError:
+                # some versions of Windows define STARTF_USEWHOWWINDOW
+                # in a separate _suprocess module
+                try:
+                    import _subprocess
+                except ImportError:
+                    self.server.logger.info(
+                        'warning: could not import _subprocess')
+                else:
+                    startupinfo.dwFlags != _subprocess.STARTF_USESHOWWINDOW
+
             output = subprocess.check_output(
                 ['tasklist', '/FI', 'PID eq {0}'.format(PID)],
                 startupinfo=startupinfo
             )
             pid = PID if not PY3 else bytes(PID, 'utf8')
-            if not pid in output:
+            if pid not in output:
                 self.server.logger.info(
                     'process {0} does not exists stopping server...'.format(
                         PID

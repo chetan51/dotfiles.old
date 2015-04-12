@@ -13,6 +13,7 @@ from ..anaconda_lib.helpers import get_settings, git_installation, is_python
 
 DEFAULT_TEST_COMMAND = "nosetests"
 TEST_DELIMETER = "."
+TB_FILE = r'[ ]*File \"(...*?)\", line ([0-9]*)'
 
 
 def virtualenv(func):
@@ -149,7 +150,9 @@ class AnacondaRunTestsBase(sublime_plugin.TextCommand):
         self.view.window().run_command(
             'exec', {
                 'shell_cmd': command,
-                'working_dir': self.test_root
+                'working_dir': self.test_root,
+                'syntax': self.output_syntax,
+                "file_regex": TB_FILE
             }
         )
         self._save_test_run(command)
@@ -188,7 +191,6 @@ class AnacondaRunTestsBase(sublime_plugin.TextCommand):
         """
 
         panel = self.view.window().get_output_panel('exec')
-        panel.set_syntax_file(self.output_syntax)
         panel.settings().set('wrap_width', width,)
 
         if self.output_show_color:

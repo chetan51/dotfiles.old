@@ -233,7 +233,7 @@ class LocalWorker(BaseWorker):
                     python = python.replace(
                         '$VIRTUAL_ENV', os.environ.get('VIRTUAL_ENV'))
                 else:
-                    print(
+                    logging.info(
                         'WARNING: your anaconda configured python interpreter '
                         'is {} but there is no $VIRTUAL_ENV key in your '
                         'environment, fallin back to `python`.'.format(
@@ -253,7 +253,10 @@ class LocalWorker(BaseWorker):
             args.extend(['-e', ','.join(paths)])
 
         args.extend([str(os.getpid())])
-        self.process = create_subprocess(args)
+        kwargs = {}
+        if len(sublime.active_window().folders()) > 0:
+            kwargs['cwd'] = sublime.active_window().folders()[0]
+        self.process = create_subprocess(args, **kwargs)
         if self.process is None:
             # we can't spawn a new process for jsonserver. Wrong config?
             self.green_light = False

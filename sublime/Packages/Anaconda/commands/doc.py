@@ -2,12 +2,15 @@
 # Copyright (C) 2013 - Oscar Campos <oscar.campos@member.fsf.org>
 # This program is Free Software see LICENSE file for details
 
+from functools import partial
+
 import sublime
 import sublime_plugin
 
 from ..anaconda_lib.worker import Worker
+from ..anaconda_lib.tooltips import Tooltip
 from ..anaconda_lib.callback import Callback
-from ..anaconda_lib.helpers import prepare_send_data, is_python
+from ..anaconda_lib.helpers import prepare_send_data, is_python, get_settings
 
 
 class AnacondaDoc(sublime_plugin.TextCommand):
@@ -24,13 +27,20 @@ class AnacondaDoc(sublime_plugin.TextCommand):
                     location = (location[0], location[1] - 1)
 
                 data = prepare_send_data(location, 'doc', 'jedi')
+                if int(sublime.version()) >= 3070:
+                    data['html'] = get_settings(
+                        self.view, 'enable_docstrings_tooltip', False)
                 Worker().execute(
                     Callback(on_success=self.prepare_data), **data
                 )
             except Exception as error:
                 print(error)
         else:
-            self.print_doc(edit)
+            if (get_settings(self.view, 'enable_docstrings_tooltip', False)
+                    and int(sublime.version()) >= 3070):
+                self.print_popup(edit)
+            else:
+                self.print_doc(edit)
 
     def is_enabled(self):
         """Determine if this command is enabled or not
@@ -69,6 +79,19 @@ class AnacondaDoc(sublime_plugin.TextCommand):
         self.view.window().run_command(
             'show_panel', {'panel': 'output.anaconda_documentation'}
         )
+
+    def print_popup(self, edit):
+        """Show message in a popup
+        """
+
+        dlines = self.documentation.splitlines()
+        name = dlines[0]
+        docstring = ''.join(dlines[1:])
+        content = {'name': name, 'content': docstring}
+        self.documentation = None
+        css = get_settings(self.view, 'anaconda_tooltip_theme', 'dark')
+        Tooltip(css).show_tooltip(
+            self.view, 'doc', content, partial(self.print_doc, edit))
 
     def _show_status(self):
         """Show message in the view status bar
