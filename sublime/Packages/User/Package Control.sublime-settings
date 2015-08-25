@@ -5,20 +5,15 @@
 	],
 	"installed_packages":
 	[
-		"Anaconda",
-		"GitGutter",
-		"MacTerminal",
 		"MarkdownEditing",
 		"Package Control",
 		"Pretty JSON",
-		"SublimeAStyleFormatter",
 		"SublimeGit",
 		"SublimeLinter",
 		"SublimeLinter-contrib-clang",
 		"SublimeLinter-jshint",
 		"Theme - Soda",
 		"Theme - Spacegray",
-		"TrailingSpaces",
-		"Unity Completions"
+		"TrailingSpaces"
 	]
 }

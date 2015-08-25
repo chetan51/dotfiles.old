@@ -12,21 +12,44 @@
 
 import shlex
 from SublimeLinter.lint import Linter, persist
+import sublime
+import os
+import string
+
+
+def get_project_folder():
+    proj_file = sublime.active_window().project_file_name()
+    if proj_file:
+        return os.path.dirname(proj_file)
+    # Use current file's folder when no project file is opened.
+    return os.path.dirname( sublime.active_window().active_view().file_name() )
+
+
+def apply_template(s):
+    mapping = {
+        "project_folder": get_project_folder()
+    }
+    templ = string.Template(s)
+    return templ.safe_substitute(mapping)
 
 
 class Clang(Linter):
 
     """Provides an interface to clang."""
 
-    syntax = ('c', 'c improved', 'c++')
+    syntax = ('c', 'c improved', 'c++', 'c++11')
     executable = 'clang'
 
-    # We are missing out on some errors by ignoring multiline messages.
-    regex = (
-        r'^<stdin>:(?P<line>\d+):(?P<col>\d+): '
-        r'(?:(?P<error>(error|fatal error))|(?P<warning>warning)): '
-        r'(?P<message>.+)'
+    regex = (r'<stdin>:(?P<line>\d+):'
+        r'((?P<col>\d*): )?'# column number, colon and space are only applicable for single line messages
+        # several lines of anything followed by
+        # either error/warning/note or newline (= irrelevant backtrace content)
+        # (lazy quantifiers so we don’t skip what we seek)
+        r'(.*?((?P<error>error)|(?P<warning>warning|note)|\r?\n))+?'
+        r': (?P<message>.+)'# match the remaining content of the current line for output
     )
+
+    multiline = True
 
     defaults = {
         'include_dirs': [],
@@ -34,8 +57,8 @@ class Clang(Linter):
     }
 
     base_cmd = (
-        'clang -cc1 -fsyntax-only '
-        '-fno-caret-diagnostics -fcxx-exceptions -Wall '
+        'clang -fsyntax-only '
+        '-fno-caret-diagnostics -Wall '
     )
 
     def cmd(self):
@@ -49,15 +72,17 @@ class Clang(Linter):
 
         result = self.base_cmd
 
-        if persist.get_syntax(self.view) == 'c++':
+        if persist.get_syntax(self.view) in ['c', 'c improved']:
+            result += ' -x c '
+        elif persist.get_syntax(self.view) in ['c++', 'c++11']:
             result += ' -x c++ '
 
         settings = self.get_view_settings()
-        result += settings.get('extra_flags', '')
+        result += apply_template( settings.get('extra_flags', '') )
 
         include_dirs = settings.get('include_dirs', [])
 
         if include_dirs:
-            result += ' '.join([' -I ' + shlex.quote(include) for include in include_dirs])
+            result += apply_template( ' '.join([' -I ' + shlex.quote(include) for include in include_dirs]) )
 
-        return result
+        return result + ' -'

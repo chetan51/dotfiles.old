@@ -1,11 +1,12 @@
 {
 	"color_scheme": "Packages/User/base16-ocean.dark (SL).tmTheme",
-	"font_size": 19.0,
+	"font_size": 17.0,
 	"ignored_packages":
 	[
 		"Markdown"
 	],
 	"indent_to_bracket": true,
+	"open_files_in_new_window": false,
 	"rulers":
 	[
 		80
@@ -14,5 +15,6 @@
 	"tab_size": 4,
 	"theme": "Spacegray.sublime-theme",
 	"vintage_start_in_command_mode": true,
-	"vintage_use_clipboard": true
+	"vintage_use_clipboard": true,
+	"word_wrap": "false"
 }
