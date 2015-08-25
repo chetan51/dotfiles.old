@@ -139,5 +139,13 @@
         "key": "setting.command_mode"
       }
     ]
+  },
+  { "keys": ["escape"],
+    "command": "exit_auto_complete_and_insert_mode",
+    "context": [{
+      "key": "auto_complete_visible",
+      "operator": "equal",
+      "operand": true
+    }]
   }
 ]
