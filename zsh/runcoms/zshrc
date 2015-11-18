@@ -1,5 +1,9 @@
 export DISABLE_AUTO_TITLE="true"
 
+# Python
+export PATH=$HOME/Library/Python/2.7/bin:$PATH
+export PYTHONPATH=$HOME/Library/Python/2.7/lib/python/site-packages:$PYTHONPATH
+
 # Prezto
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
@@ -17,6 +21,7 @@ if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # Terminal aliases and functions
 alias o="open"
 function c() { cd "$@"; ls; }
+alias notify="osascript -e 'display notification with title \"Job complete.\"'"
 
 # Shortcut aliases
 alias chrome-dev="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --allow-file-access-from-files"
@@ -40,9 +45,6 @@ export GNUTERM=x11
 alias hadoop-start="/usr/local/Cellar/hadoop/1.0.3/bin/start-all.sh"
 alias hadoop-stop="/usr/local/Cellar/hadoop/1.0.3/bin/stop-all.sh"
 
-# Python
-export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/python2.7/site-packages
-
 # Fasd
 eval "$(fasd --init posix-alias zsh-hook)"
 
@@ -58,8 +60,8 @@ alias gpu="git push"
 # NuPIC
 export NUPIC=$HOME/Dropbox/Development/nupic
 
-# Grok
-source $HOME/.grok/.grokrc
+# Keys
+source $HOME/.keys
 
 # Taurus
 export TAURUS_RMQ_METRIC_DEST="127.0.0.1:2003"
