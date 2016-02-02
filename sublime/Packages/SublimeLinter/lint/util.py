@@ -647,7 +647,7 @@ def create_environment():
     paths = persist.settings.get('paths', {})
 
     if sublime.platform() in paths:
-        paths = convert_type(paths[sublime.platform()], [])
+        paths = [os.path.abspath(os.path.expanduser(path)) for path in convert_type(paths[sublime.platform()], [])]
     else:
         paths = []
 
@@ -1378,6 +1378,23 @@ def center_region_in_view(region, view):
     if y2 == y1:
         view.set_viewport_position((x1, y1 - 1.0))
         view.show_at_center(region)
+
+
+class cd:
+    """Context manager for changing the current working directory."""
+
+    def __init__(self, newPath):
+        """Save the new wd."""
+        self.newPath = os.path.expanduser(newPath)
+
+    def __enter__(self):
+        """Save the old wd and change to the new wd."""
+        self.savedPath = os.getcwd()
+        os.chdir(self.newPath)
+
+    def __exit__(self, etype, value, traceback):
+        """Go back to the old wd."""
+        os.chdir(self.savedPath)
 
 
 # color-related constants

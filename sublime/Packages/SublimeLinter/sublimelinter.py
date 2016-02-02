@@ -49,7 +49,6 @@ def plugin_loaded():
 
 
 class SublimeLinter(sublime_plugin.EventListener):
-
     """The main ST3 plugin class."""
 
     # We use this to match linter settings filenames.
@@ -459,8 +458,10 @@ class SublimeLinter(sublime_plugin.EventListener):
             else:
                 show_errors = False
         else:
-            if (
-                show_errors or
+            if show_errors:
+                # if showing errors on save, linting must be synchronized.
+                self.lint(vid)
+            elif (
                 mode in ('load/save', 'save only') or
                 mode == 'background' and self.view_has_file_only_linter(vid)
             ):
@@ -492,7 +493,6 @@ class SublimeLinter(sublime_plugin.EventListener):
 
 
 class SublimelinterEditCommand(sublime_plugin.TextCommand):
-
     """A plugin command used to generate an edit object for a view."""
 
     def run(self, edit):
