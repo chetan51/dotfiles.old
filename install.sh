@@ -5,6 +5,9 @@ DOTFILES=`pwd`
 ln -s "$DOTFILES/vim" "$HOME/.vim"
 ln -s "$DOTFILES/vim/.vimrc" "$HOME/.vimrc"
 
+# Atom
+ln -s "$DOTFILES/atom/.atom" "$HOME/.atom"
+
 mkdir -p "$DOTFILES/matplotlib"
 ln -s "$DOTFILES/matplotlib/matplotlibrc" "$HOME/.matplotlib/matplotlibrc"
 

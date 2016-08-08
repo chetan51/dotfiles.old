@@ -1,0 +1,28 @@
+"*":
+  "autocomplete-plus":
+    backspaceTriggersAutocomplete: true
+    confirmCompletion: "tab"
+    includeCompletionsFromAllBuffers: false
+    minimumWordLength: 1
+  autosave:
+    enabled: true
+  core:
+    packagesWithKeymapsDisabled: []
+    themes: [
+      "atom-material-ui"
+      "atom-material-syntax"
+    ]
+  editor:
+    fontSize: 16
+    softWrap: true
+  "exception-reporting":
+    userId: "f403eaf3-a98b-1c5d-cc9b-5467a68cef60"
+  "project-plus":
+    autoDiscover: false
+  "relative-numbers": {}
+  "vim-mode-plus":
+    incrementalSearch: true
+    useClipboardAsDefaultRegister: true
+    useSmartcaseForSearch: true
+  welcome:
+    showOnStartup: false
